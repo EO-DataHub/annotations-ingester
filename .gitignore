@@ -162,4 +162,7 @@ cython_debug/
 
 
 *.bak
+/scratch
 
+.make-venv-installed
+.pre-commit-config.yaml
