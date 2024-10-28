@@ -1,0 +1,57 @@
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix dctype: <http://purl.org/dc/dcmitype/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sdo: <http://schema.org/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix vcard: <http://www.w3.org/2006/vcard/ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sdmx-attribute: <http://purl.org/linked-data/sdmx/2009/attribute#> .
+
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix vann:    <http://purl.org/vocab/vann/> .
+@prefix qb:      <http://purl.org/linked-data/cube#> .
+@prefix daq:     <http://purl.org/eis/vocab/daq#> .
+@prefix voaf:    <http://purl.org/vocommons/voaf#> .
+@prefix oa:      <http://www.w3.org/ns/oa#> .
+@prefix duv:     <http://www.w3.org/ns/duv#> .
+
+@prefix dqv:     <http://www.w3.org/ns/dqv#> .
+
+@prefix eodhqa: <https://eodatahub.org.uk/api/ontologies/qa/> .
+@prefix eodh: <https://eodatahub.org.uk/api/ontologies/annotations/> .
+
+@prefix : <https://eodatahub.org.uk/api/ontologies/qa-runs/d5e53c05-861e-4946-9951-cfabdbfc44fd> .
+
+
+:qualityCheckRun {
+    :checkRun
+        a                           eodhqa:EODHQualityMeasurementDataset;
+        rdfs:label                  "radiometric uncertainty run d5e53c05-861e-4946-9951-cfabdbfc44fd";
+        owl:sameAs                  <urn:uuid:d5e53c05-861e-4946-9951-cfabdbfc44fd>;
+        eodhqa:datasetComputedOn    <https://dev.eodatahub.org.uk/api/catalogue/stac/catalogs/supported-datasets/ceda-stac-fastapi/collections/sentinel1_l1c> ;
+        prov:generatedAtTime        "2024-07-26T16:10:00Z"^^xsd:dateTime ;
+        eodhqa:validityEnd          "2025-01-25T04:10:00Z"^^xsd:dateTime
+        .
+
+
+    :productDetailsCheck
+        a                           dqv:QualityMeasurement ;
+        sdmx-attribute:unitMeasure  eodhqa:gradeScale;
+        dqv:isMeasurementOf         eodhqa:productDetails;
+        dqv:computedOn              <https://dev.eodatahub.org.uk/api/catalogue/stac/catalogs/supported-datasets/ceda-stac-fastapi/collections/sentinel1_l1c> ;
+        qb:dataSet                  :checkRun ;
+        dqv:value                   eodhqa:gradeGood
+        .
+}
+
+:qualityCheckRun
+    a dqv:QualityMetadata ;
+    prov:wasAttributedTo :myQualityChecker ;
+    prov:generatedAtTime "2024-07-26T16:10:00Z"^^xsd:dateTime ;
+    prov:wasGeneratedBy :myQualityChecking .
+

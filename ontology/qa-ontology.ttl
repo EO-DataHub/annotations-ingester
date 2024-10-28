@@ -22,6 +22,7 @@
 @prefix dqv:     <http://www.w3.org/ns/dqv#> .
 
 @prefix eodhqa: <https://eodatahub.org.uk/api/ontologies/qa/> .
+@prefix eodhweblinks: <https://eodatahub.org.uk/api/ontologies/weblinks/> .
 
 
 eodhqa:documentation
@@ -224,7 +225,12 @@ eodhqa:mtf
     .
 
 
-# TODO: The grading scale is probably not properly represented.
+###################################################################
+# Grading scale used by EDAP
+#
+# First we have a generic grading scale then specific ones for each
+# assessment. These are necessary because the definitions of what counts
+# as 'good', etc., differ based on what is being assessed.
 eodhqa:gradeNotAssessed
     a                       skos:Concept ;
     skos:prefLabel          "Not Assessed"@en;
@@ -269,3 +275,100 @@ eodhqa:gradeScale
     rdfs:comment            "The generic grading scale defined by EDAP. The specific meanings of each grade vary depending on the dimension being measured."@en;
     skos:memberList         (eodhqa:gradeNotAssessed eodhqa:gradeNotAssessable eodhqa:gradeBasic eodhqa:gradeGood eodhqa:gradeExcellent eodhqa:gradeIdeal)
     .
+
+
+
+#########################
+# Now we have a grading scale used for the compliance of measured performance
+# with mission claims.
+eodhqa:performanceGradeNotAssessable
+    a                       skos:Concept ;
+    skos:prefLabel          "Not Assessable"@en;
+    skos:definition         "No validation activity performed."@en;
+    skos:broader            eodhqa:gradeNotAssessable
+    .
+
+eodhqa:performanceGradeBasic
+    a                       skos:Concept ;
+    skos:prefLabel          "Basic"@en;
+    skos:definition         "Claimed mission performance shows some agreement with validation results"@en;
+    skos:broader            eodhqa:gradeBasic
+    .
+
+eodhqa:performanceGradeGood
+    a                       skos:Concept ;
+    skos:prefLabel          "Good"@en;
+    skos:definition         "Claimed mission performance shows good agreement with validation results"@en;
+    skos:broader            eodhqa:gradeGood
+    .
+
+eodhqa:performanceGradeExcellent
+    a                       skos:Concept ;
+    skos:prefLabel          "Excellent"@en;
+    skos:definition         "Claimed mission performance shows excellent agreement with validation results. Analysis performed independently of the satellite mission owner"@en;
+    skos:broader            eodhqa:gradeExcellent
+    .
+
+eodhqa:performanceGradeIdeal
+    a                       skos:Concept ;
+    skos:prefLabel          "Ideal"@en;
+    skos:definition         "Claimed mission performance shows excellent agreement with validation results, measurement uncertainties also validated. Analysis performed independently of the satellite mission owner"@en;
+    skos:broader            eodhqa:gradeIdeal
+    .
+
+eodhqa:performanceGradeScale
+    a                       rdfs:Class ;
+    a                       owl:Class ;
+    a                       skos:OrderedCollection ;
+    skos:broader            eodhqa:gradeScale;
+    rdfs:label              "EDAP Grading Scale"@en ;
+    rdfs:comment            "The generic grading scale defined by EDAP. The specific meanings of each grade vary depending on the dimension being measured."@en;
+    skos:memberList         (eodhqa:gradeNotAssessed eodhqa:gradeNotAssessable eodhqa:gradeBasic eodhqa:gradeGood eodhqa:gradeExcellent eodhqa:gradeIdeal)
+    .
+
+
+
+
+eodhqa:EODHQualityMeasurementDataset
+    a                       owl:Class, rdfs:Class ;
+    rdfs:label              "EODH Quality Measurement Dataset"@en ;
+    rdfs:comment            "Represents a dataset of quality measurements following EODH conventions. A distinguishing feature is that these must be computed on exactly one dataset."@en ;
+    rdfs:subClassOf         dqv:QualityMeasurementDataset
+    .
+
+eodhqa:datasetComputedOn
+    a                       rdf:Property;
+    rdfs:label              "computed on"@en ;
+    rdfs:comment            "Refers to the resource (e.g., a dataset, a linkset, a graph, a set of triples) on which the quality measurement is performed."@en ;
+    rdfs:domain             eodhqa:EODHQualityMeasurementDataset;
+    rdfs:range              dcat:Dataset, dcat:Distribution;
+    .
+
+eodhqa:weblink
+    a                       rdf:Property;
+    rdfs:label              "link"@en ;
+    rdfs:comment            "Link to more information about the quality measurement."@en ;
+    rdfs:domain             eodhqa:EODHQualityMeasurementDataset, dqv:Metric;
+    rdfs:range              eodhweblinks:Weblink;
+    .
+
+eodhqa:detailResultsLink
+    a                       eodhweblinks:RelationType
+    rdfs:label              "detailed results" ;
+    rdfs:comment            "Links to a detailed report, in human readable form, which further describe a quality result."
+    .
+
+eodhqa:resultVisualisationLink
+    a                       eodhweblinks:RelationType
+    rdfs:label              "visualisation" ;
+    rdfs:comment            "Links to a visualisation of quality results."
+    .
+
+eodhqa:validityEnd
+    a                       rdf:Property;
+    rdfs:label              "validity end"@en ;
+    rdfs:comment            "These quality results are considered valid until this date."@en ;
+    rdfs:domain             eodhqa:EODHQualityMeasurementDataset;
+    rdfs:range              xsd:dateTime;
+    .
+
