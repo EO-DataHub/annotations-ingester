@@ -328,6 +328,36 @@ eodhqa:performanceGradeScale
 
 
 
+#######################################
+# For some results we get just pass/partial/fail
+eodhqa:pass
+    a                       skos:Concept ;
+    skos:prefLabel          "Pass"@en;
+    skos:definition         "Dataset passes check"@en
+    .
+
+eodhqa:partialPass
+    a                       skos:Concept ;
+    skos:prefLabel          "Partial Pass"@en;
+    skos:definition         "Dataset partially passes check"@en
+    .
+
+eodhqa:fail
+    a                       skos:Concept ;
+    skos:prefLabel          "Fail"@en;
+    skos:definition         "Dataset fails check"@en
+    .
+
+eodhqa:passPartialFailScale
+    a                       rdfs:Class ;
+    a                       owl:Class ;
+    a                       skos:OrderedCollection ;
+    rdfs:label              "Pass/partial pass/fail Grading Scale"@en ;
+    rdfs:comment            "Simple pass, partial pass or fail scale."@en;
+    skos:memberList         (eodhqa:fail eodhqa:partialPass eodhqa:pass)
+    .
+
+
 
 eodhqa:EODHQualityMeasurementDataset
     a                       owl:Class, rdfs:Class ;
@@ -352,14 +382,14 @@ eodhqa:weblink
     rdfs:range              eodhweblinks:Weblink;
     .
 
-eodhqa:detailResultsLink
-    a                       eodhweblinks:RelationType
+eodhqa:detailedResultsLink
+    a                       eodhweblinks:RelationType;
     rdfs:label              "detailed results" ;
     rdfs:comment            "Links to a detailed report, in human readable form, which further describe a quality result."
     .
 
 eodhqa:resultVisualisationLink
-    a                       eodhweblinks:RelationType
+    a                       eodhweblinks:RelationType;
     rdfs:label              "visualisation" ;
     rdfs:comment            "Links to a visualisation of quality results."
     .

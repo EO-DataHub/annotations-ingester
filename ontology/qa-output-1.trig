@@ -26,18 +26,8 @@
 @prefix eodh: <https://eodatahub.org.uk/api/ontologies/annotations/> .
 @prefix eodhweblinks: <https://eodatahub.org.uk/api/ontologies/weblinks/> .
 
-@prefix : <https://dev.eodatahub.org.uk/ades/qa-workspace/ogc-api/jobs/968dff48-6316-4c3a-9d3e-62d61c658a53> .
+@prefix : <https://dev.eodatahub.org.uk/ades/qa-workspace/ogc-api/jobs/7462319b-947c-4900-83a7-5341362cfab6> .
 
-
-# Unresolved questions:
-#  - Can we tie the author to a persistent identifier? eg https://eodatahub.org.uk/api/users/authorusername
-#  - Can we relate this person to an organization?
-#  - Can we obtain more information about the QA check pipeline? Should we use PROV and broader provenance support?
-#  - Is there a better way to identify a workflow and a workflow job? eg, fit them into the single API hierarchy.
-#  - What does NPL's 'check_version' represent?
-#  - How do identify this output?
-#    This uses https://dev.eodatahub.org.uk/ades/qa-workspace/ogc-api/jobs/968dff48-6316-4c3a-9d3e-62d61c658a53 but
-#    we'd also need an identifier for a harvest from a Git repo, etc., so maybe we need an identifier for a harvest.
 
 _:org
     a                           prov:Agent, prov:Organization;
@@ -51,14 +41,14 @@ _:author
     .
 
 
-<https://dev.eodatahub.org.uk/ades/qa-workspace/ogc-api/processes/qa-workflow-id>
+<https://dev.eodatahub.org.uk/ades/qa-workspace/ogc-api/processes/qa-workflow-id-1>
     # Unsure if this should be an Entity or a SoftwareAgent.
     a                           prov:Entity
     .
 
-<https://dev.eodatahub.org.uk/ades/qa-workspace/ogc-api/jobs/968dff48-6316-4c3a-9d3e-62d61c658a53>
+<https://dev.eodatahub.org.uk/ades/qa-workspace/ogc-api/jobs/7462319b-947c-4900-83a7-5341362cfab6>
     a                           prov:Activity;
-    prov:used                   <https://dev.eodatahub.org.uk/ades/qa-workspace/ogc-api/processes/qa-workflow-id>;
+    prov:used                   <https://dev.eodatahub.org.uk/ades/qa-workspace/ogc-api/processes/qa-workflow-id-1>;
     prov:wasAssociatedWith      _:author
     .
 
@@ -66,43 +56,54 @@ _:author
 :qualityCheckResults {
     :checkRun
         a                           eodhqa:EODHQualityMeasurementDataset;
-        rdfs:label                  "documentation review d5e53c05-861e-4946-9951-cfabdbfc44fd";
-        owl:sameAs                  <urn:uuid:d5e53c05-861e-4946-9951-cfabdbfc44fd>;
+        rdfs:label                  "radiometric uncertainty run 7462319b-947c-4900-83a7-5341362cfab6";
+        owl:sameAs                  <urn:uuid:7462319b-947c-4900-83a7-5341362cfab6>;
         eodhqa:datasetComputedOn    <https://dev.eodatahub.org.uk/api/catalogue/stac/catalogs/supported-datasets/ceda-stac-fastapi/collections/sentinel1_l1c> ;
         eodhqa:validityEnd          "2025-01-25T04:10:00Z"^^xsd:dateTime;
-        eodhqa:weblink              :doc1, :doc2
+        eodhqa:weblink              :refDetailedResults, :refVisualisation
         .
 
-
-    :productDetailsCheck
+    # This isn't in NPL's example but I'm expecting more information than pass/partial/fail
+    :snrCheck1
         a                           dqv:QualityMeasurement ;
-        sdmx-attribute:unitMeasure  eodhqa:gradeScale;
-        dqv:isMeasurementOf         eodhqa:productDetails;
+        sdmx-attribute:unitMeasure  <http://www.ontology-of-units-of-measure.org/resource/om-2/decibel> ;
+        dqv:isMeasurementOf         :snrMetric ;
         dqv:computedOn              <https://dev.eodatahub.org.uk/api/catalogue/stac/catalogs/supported-datasets/ceda-stac-fastapi/collections/sentinel1_l1c> ;
         qb:dataSet                  :checkRun ;
-        dqv:value                   eodhqa:gradeGood
-        .
-    
-    :doc1
-        a                           eodhweblinks:Weblink;
-        eodhweblinks:type           <https://www.iana.org/assignments/media-types/application/pdf>;
-        eodhweblinks:rel            eodhqa:detailedResultsLink;
-        eodhweblinks:title          "Detailed Results"@en;
-        eodhweblinks:href           "https://qa-workspace.eodatahub-workspaces.org.uk/files/workflow-outputs/968dff48-6316-4c3a-9d3e-62d61c658a53/doc1.pdf"
+        dqv:value                   100
         .
 
-    :doc2
+
+    :radiometricUncertaintyCheckPF
+        a                           dqv:QualityMeasurement;
+        dqv:isMeasurementOf         eodhqa:radiomtricUncertainty;
+        dqv:computedOn              <https://dev.eodatahub.org.uk/api/catalogue/stac/catalogs/supported-datasets/ceda-stac-fastapi/collections/sentinel1_l1c> ;
+        qb:DataSet                  :checkRun ;
+        # These values aren't defined yet in qa-ontology.ttl - need to know what these should be
+        sdmx-attribute:unitMeasure  eodhqa:passPartialFail;
+        dqv:value                   eodhqa:pass
+        .
+    
+    :refDetailedResults
         a                           eodhweblinks:Weblink;
         eodhweblinks:type           <https://www.iana.org/assignments/media-types/application/pdf>;
         eodhweblinks:rel            eodhqa:detailedResultsLink;
         eodhweblinks:title          "Detailed Results"@en;
-        eodhweblinks:href           "https://qa-workspace.eodatahub-workspaces.org.uk/files/workflow-outputs/968dff48-6316-4c3a-9d3e-62d61c658a53/doc2.pdf"
+        eodhweblinks:href           "https://qa-workspace.eodatahub-workspaces.org.uk/files/workflow-outputs/7462319b-947c-4900-83a7-5341362cfab6/report.pdf"
+        .
+
+    :refVisualisation
+        a                           eodhweblinks:Weblink;
+        eodhweblinks:type           <https://www.iana.org/assignments/media-types/text/html>;
+        eodhweblinks:rel            eodhqa:resultVisualisationLink;
+        eodhweblinks:title          "Visualition of results"@en;
+        eodhweblinks:href           "https://qa-workspace.eodatahub-workspaces.org.uk/files/workflow-outputs/7462319b-947c-4900-83a7-5341362cfab6/vis.html"
         .
 }
 
 :qualityCheckResults
     a                           dqv:QualityMetadata, prov:Entity ;
     prov:generatedAtTime        "2024-07-26T16:10:00Z"^^xsd:dateTime ;
-    prov:wasGeneratedBy         <https://dev.eodatahub.org.uk/ades/qa-workspace/ogc-api/jobs/968dff48-6316-4c3a-9d3e-62d61c658a53>;
+    prov:wasGeneratedBy         <https://dev.eodatahub.org.uk/ades/qa-workspace/ogc-api/jobs/7462319b-947c-4900-83a7-5341362cfab6>;
     prov:wasAttributedTo        _:author;
     .

@@ -26,6 +26,7 @@
 
 @prefix eodh: <https://eodatahub.org.uk/api/ontologies/annotations/> .
 @prefix eodhweblinks: <https://eodatahub.org.uk/api/ontologies/weblinks/> .
+@prefix eodhqa: <https://eodatahub.org.uk/api/ontologies/qa/> .
 
 # This is for MIME types
 @prefix gist: <https://semantic-arts.com/gist/> .
@@ -33,13 +34,13 @@
 
 eodhweblinks:Weblink
     a                       owl:Class, rdfs:Class ;
-    rdfs:label              "Web Link"
+    rdfs:label              "Web Link";
     rdfs:comment            "Web link such as a 'links' entry in STAC or a link in RFC8288"@en ;
     .
 
 eodhweblinks:RelationType
     a                       owl:Class, rdfs:Class ;
-    rdfs:label              "Web Link Relation Type"
+    rdfs:label              "Web Link Relation Type";
     rdfs:comment            "Web link relation type as defined in RFC8288 - should be one of the EODH recognized types where available"@en ;
     .
 
@@ -86,3 +87,10 @@ eodhweblinks:title
     rdfs:range              xsd:string;
     .
 
+eodhweblinks:href
+    a                       rdf:Property;
+    rdfs:label              "href"@en ;
+    rdfs:comment            "Link URL"@en ;
+    rdfs:domain             eodhqa:EODHWeblink;
+    rdfs:range              xsd:anyUri;
+    .
