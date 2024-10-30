@@ -34,7 +34,7 @@ jobs:
 
   unit-tests:
     name: Run unit tests
-    uses: EO-DataHub/github-actions/.github/workflows/unit-tests-python.yaml@EODHP-692-support-python-312
+    uses: EO-DataHub/github-actions/.github/workflows/unit-tests-python.yaml@main
     with:
       PYTHON_VERSION: "3.12"
 
@@ -53,7 +53,7 @@ jobs:
   aws-ecr-build:
     name: Build ECR image
     needs: get-tag-name
-    uses: EO-DataHub/github-actions/.github/workflows/docker-image-to-aws-ecr.yaml@EODHP-692-support-python-312
+    uses: EO-DataHub/github-actions/.github/workflows/docker-image-to-aws-ecr.yaml@main
     with:
       image_name: annotations-ingester
       image_tag: ${{ needs.get-tag-name.outputs.image_tag }}
