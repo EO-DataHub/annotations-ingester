@@ -30,7 +30,7 @@ jobs:
 
   security-scan:
     name: Call Security Scan
-    uses: EO-DataHub/github-actions/.github/workflows/security.yaml@main
+    uses: EO-DataHub/github-actions/.github/workflows/security.yaml@update-trivy
 
   unit-tests:
     name: Run unit tests
