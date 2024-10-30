@@ -1,16 +1,12 @@
 import copy
 import io
 import json
-import sys
 
 import pytest
 from rdflib import DCTERMS, Graph, Literal, URIRef
 from rdflib.namespace import DCAT, RDF
 
-from annotations_ingester.dataset_dcat_generator import (
-    CatalogueChangeMessager,
-    DatasetDCATMessager,
-)
+from annotations_ingester.dataset_dcat_generator import DatasetDCATMessager, Messager
 
 SOURCE_PATH = "https://example.link.for.test/"
 TARGET = "/target_directory/"
@@ -130,13 +126,12 @@ def mock_catalog():
     [
         json.loads('{"not_stac": "but is json"}'),
         json.loads('{"type": "Feature", "stac_version": "1.0.0"}'),
-        "not json\n\0",
     ],
 )
 def test_ignores_irrelevant_entries(fake_entry):
     messager = DatasetDCATMessager(None)
 
-    actions = messager.consume_update(cat_path="/a/b", file_body=fake_entry)
+    actions = messager.process_stac_update(cat_path="/a/b", stac=fake_entry)
 
     assert actions is None
 
@@ -146,18 +141,18 @@ def process_stac_to_graph(stac: dict) -> Graph:
     and returned."""
     messager = DatasetDCATMessager(None)
 
-    actions = messager.consume_update(
+    actions = messager.process_stac_update(
         cat_path="/cat/path",
-        file_body=copy.deepcopy(stac),
+        stac=copy.deepcopy(stac),
     )
 
-    assert len(actions) == 1
-    assert isinstance(actions[0], CatalogueChangeMessager.S3UploadAction)
+    assert len(actions) == 2
 
-    sys.stderr.write(actions[0].file_body)
+    for action in actions:
+        assert isinstance(action, Messager.S3UploadAction)
 
-    g = Graph()
-    g.parse(io.StringIO(actions[0].file_body), format="turtle")
+        g = Graph()
+        g.parse(io.StringIO(action.file_body), format=action.mime_type)
 
     return g
 

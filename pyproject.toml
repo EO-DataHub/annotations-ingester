@@ -18,8 +18,8 @@ version = "0.1.0"
 description = "Populates annotations service with annotations and with a DCAT representation of the catalogue"
 readme = "README.md"
 
-# Our target version is Python 3.11, but it may work with earlier versions.
-requires-python = ">=3.11"
+# 3.12 is required for generic types, eg `class Message[MSGTYPE]`
+requires-python = ">=3.12"
 
 license = {file = "LICENSE"}
 

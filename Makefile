@@ -43,7 +43,8 @@ requirements-update: venv
 	./venv/bin/pip-compile --extra dev -o requirements-dev.txt -U
 
 venv:
-	python3.11 -m venv venv --upgrade-deps
+	# You may need: sudo apt install python3.12-dev python3.12-venv
+	python3.12 -m venv venv --upgrade-deps
 	./venv/bin/pip3 install pip-tools
 
 .make-venv-installed: venv requirements.txt requirements-dev.txt
