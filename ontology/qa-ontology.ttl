@@ -1,0 +1,404 @@
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix dctype: <http://purl.org/dc/dcmitype/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sdo: <http://schema.org/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix vcard: <http://www.w3.org/2006/vcard/ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix vann:    <http://purl.org/vocab/vann/> .
+@prefix qb:      <http://purl.org/linked-data/cube#> .
+@prefix daq:     <http://purl.org/eis/vocab/daq#> .
+@prefix voaf:    <http://purl.org/vocommons/voaf#> .
+@prefix oa:      <http://www.w3.org/ns/oa#> .
+@prefix duv:     <http://www.w3.org/ns/duv#> .
+
+@prefix dqv:     <http://www.w3.org/ns/dqv#> .
+
+@prefix eodhqa: <https://eodatahub.org.uk/api/ontologies/qa/> .
+@prefix eodhweblinks: <https://eodatahub.org.uk/api/ontologies/weblinks/> .
+
+
+eodhqa:documentation
+    a                   dqv:Category ;
+    skos:prefLabel      "Documentation Review"@en ;
+    skos:definition     "Quality information derived from the dataset's documentation"@en ;
+    .
+
+eodhqa:performance
+    a                   dqv:Category ;
+    skos:prefLabel      "Measured Performance"@en ;
+    skos:definition     "Quality information derived from direct testing of product performance"@en
+    .
+
+
+# These dimensions correspond to the three columns of the 'Data Provider Documentation Review'
+# matrix recommended by EDAP.
+eodhqa:productInformation
+    a                   dqv:Dimension;
+    dqv:inCategory      eodhqa:documentation;
+    skos:prefLabel      "Product Information"@en ;
+    skos:definition     "Quality of basic descriptive information provided for the product"@en
+    .
+
+eodhqa:metrology
+    a                   dqv:Dimension;
+    dqv:inCategory      eodhqa:documentation;
+    skos:prefLabel      "Metrology"@en ;
+    skos:definition     "Metrics of the dataset's measurement quality"@en
+    .
+
+eodhqa:productGeneration
+    a                   dqv:Dimension;
+    dqv:inCategory      eodhqa:documentation;
+    skos:prefLabel      "Product Generation"@en ;
+    skos:definition     "Quality information about the processing steps used to produce the product"@en
+    .
+
+# These correspond to the Performance Specification section in the NPL mockup, or possibly also 
+# the upper and lower halves of the EDAP Validation Summary.
+eodhqa:radiometric
+    a                   dqv:Dimension;
+    dqv:inCategory      eodhqa:performance;
+    skos:prefLabel      "Radiometric Uncertainty"@en ;
+    skos:definition     "Measures of sensor measurement quality"@en
+    .
+
+eodhqa:geometric
+    a                   dqv:Dimension;
+    dqv:inCategory      eodhqa:performance;
+    skos:prefLabel      "Geometric Uncertainty"@en ;
+    skos:definition     "Measures of dataset positioning and coregistration accuracy"@en
+    .
+
+
+
+# These are the metrics in the Quality Information matrix / Documentation Review category.
+eodhqa:productDetails
+    a                       dqv:Metric;
+    dqv:inDimension         eodhqa:productInformation;
+    dqv:expectedDataType    xsd:string;
+    skos:prefLabel          "Product Information"@en ;
+    skos:definition         "Grading based on availability of basic descriptive information about the product"@en
+    .
+
+eodhqa:availabilityAndAccessibility
+    a                       dqv:Metric;
+    dqv:inDimension         eodhqa:productInformation;
+    dqv:expectedDataType    xsd:string;
+    skos:prefLabel          "Availability and Accessibility"@en ;
+    skos:definition         "Grading based on whether FAIR principles are followed: Findability, Accessibility, Interoperability and Reusability"@en
+    .
+
+eodhqa:formatFlagsAndMetadata
+    a                       dqv:Metric;
+    dqv:inDimension         eodhqa:productInformation;
+    dqv:expectedDataType    xsd:string;
+    skos:prefLabel          "Product Format, Flags and Metadata"@en ;
+    skos:definition         "Grading based on the product format, flags and metadata following documented or standardised formats"@en
+    .
+
+eodhqa:userDocumentation
+    a                       dqv:Metric;
+    dqv:inDimension         eodhqa:productInformation;
+    dqv:expectedDataType    xsd:string;
+    skos:prefLabel          "User Documentation"@en ;
+    skos:definition         "Grading of product user guide and algorithm theoretical basis documentation"@en
+    .
+
+
+
+
+eodhqa:radiometricCalibration
+    a                       dqv:Metric;
+    dqv:inDimension         eodhqa:metrology;
+    dqv:expectedDataType    xsd:string;
+    skos:prefLabel          "Radiometric Calibration and Characterisation"@en;
+    skos:definition         "Grading of the sensor's measurement calibration and characterisation process and documentation"@en
+    .
+
+eodhqa:geometricCalibration
+    a                       dqv:Metric;
+    dqv:inDimension         eodhqa:metrology;
+    dqv:expectedDataType    xsd:string;
+    skos:prefLabel          "Geometric Calibration and Characterisation"@en;
+    skos:definition         "Grading of the sensor's geometric calibration and characterisation process and documentation"@en
+    .
+
+eodhqa:metrologicalTraceability
+    a                       dqv:Metric;
+    dqv:inDimension         eodhqa:metrology;
+    dqv:expectedDataType    xsd:string;
+    skos:prefLabel          "Metrological Traceability Documentation"@en;
+    skos:definition         "Grading of the quality of the uncertainty tree diagram and traceability chain"@en
+    .
+
+eodhqa:uncertaintyCharacterisation
+    a                       dqv:Metric;
+    dqv:inDimension         eodhqa:metrology;
+    dqv:expectedDataType    xsd:string;
+    skos:prefLabel          "Uncertainty Characterisation"@en;
+    skos:definition         "Grading of the availability and quality of estimates of measurement uncertainty"@en
+    .
+
+eodhqa:ancillaryData
+    a                       dqv:Metric;
+    dqv:inDimension         eodhqa:metrology;
+    dqv:expectedDataType    xsd:string;
+    skos:prefLabel          "Ancillary Data"@en;
+    skos:definition         "Grading of the documentation, traceability and quality of ancillary data used for product generation"@en
+    .
+
+
+eodhqa:radiometricCalibrationAlgorithm
+    a                       dqv:Metric;
+    dqv:inDimension         eodhqa:productGeneration;
+    dqv:expectedDataType    xsd:string;
+    skos:prefLabel          "Radiometric Calibration Algorithm"@en;
+    skos:definition         "Grading of the quality and documentation of the L1 calibration algorithm"@en
+    .
+
+eodhqa:geometricProcessing
+    a                       dqv:Metric;
+    dqv:inDimension         eodhqa:productGeneration;
+    dqv:expectedDataType    xsd:string;
+    skos:prefLabel          "Geometric Processing"@en;
+    skos:definition         "Grading of the geometric processing methodology and documentation"@en
+    .
+
+eodhqa:retrievalAlgorithm
+    a                       dqv:Metric;
+    dqv:inDimension         eodhqa:productGeneration;
+    dqv:expectedDataType    xsd:string;
+    skos:prefLabel          "Retrieval Algorithm"@en;
+    skos:definition         "Grading of the quality and documentation of the L2 retrieval algorithm"@en
+    .
+
+eodhqa:missionSpecificProcessing
+    a                       dqv:Metric;
+    dqv:inDimension         eodhqa:productGeneration;
+    dqv:expectedDataType    xsd:string;
+    skos:prefLabel          "Mission-specific Processing"@en;
+    skos:definition         "Grading of the quality and documentation of any additional mission-specific processing steps"@en
+    .
+
+
+# These are the metrics in the Measured Performance category.
+# This is probably not complete.
+eodhqa:radiometricUncertainty
+    a                       dqv:Metric;
+    dqv:inDimension         eodhqa:radiometric;
+    dqv:expectedDataType    xsd:double;
+    skos:prefLabel          "Radiometric Uncertainty"@en;
+    skos:definition         "?"@en
+    .
+
+eodhqa:snr
+    a                       dqv:Metric ;
+    dqv:inDimension         eodhqa:radiometric;
+    dqv:expectedDataType    xsd:double;
+    skos:prefLabel          "Signal-to-noise Ratio"@en;
+    skos:altLabel           "SNR"@en;
+    skos:definition         "Instrument signal-to-noise ratio"@en
+    .
+
+eodhqa:temporalStability
+    a                       dqv:Metric ;
+    dqv:inDimension         eodhqa:radiometric;
+    dqv:expectedDataType    xsd:double;
+    skos:prefLabel          "Temporal Stability"@en;
+    skos:definition         "?"@en
+    .
+
+eodhqa:mtf
+    a                       dqv:Metric ;
+    dqv:inDimension         eodhqa:geometric;
+    dqv:expectedDataType    xsd:double;
+    skos:prefLabel          "MTF"@en;
+    skos:definition         "?"@en
+    .
+
+
+###################################################################
+# Grading scale used by EDAP
+#
+# First we have a generic grading scale then specific ones for each
+# assessment. These are necessary because the definitions of what counts
+# as 'good', etc., differ based on what is being assessed.
+eodhqa:gradeNotAssessed
+    a                       skos:Concept ;
+    skos:prefLabel          "Not Assessed"@en;
+    skos:definition         "Assessment was out-of-scope"@en
+    .
+
+eodhqa:gradeNotAssessable
+    a                       skos:Concept ;
+    skos:prefLabel          "Not Assessable"@en;
+    skos:definition         "Assessed step not performed or information unavailable"@en
+    .
+
+eodhqa:gradeBasic
+    a                       skos:Concept ;
+    skos:prefLabel          "Basic"@en;
+    skos:definition         "Alignment between validated and claimed performance, methods used and/or documentation provided fall short of being judged fit-for-purpose"@en
+    .
+
+eodhqa:gradeGood
+    a                       skos:Concept ;
+    skos:prefLabel          "Good"@en;
+    skos:definition         "Alignment between validated and claimed performance, methods used and/or documentation provided are judged fit-for-purpose for most expected use cases"@en
+    .
+
+eodhqa:gradeExcellent
+    a                       skos:Concept ;
+    skos:prefLabel          "Excellent"@en;
+    skos:definition         "Alignment between validated and claimed performance, methods used and/or documentation provided are judged fit-for-purpose for all expected use cases"@en
+    .
+
+eodhqa:gradeIdeal
+    a                       skos:Concept ;
+    skos:prefLabel          "Ideal"@en;
+    skos:definition         "Alignment between validated and claimed performance, methods used and/or documentation provided are judged state-of-the art and easily fit-for-purpose in terms of stated performance"@en
+    .
+
+eodhqa:gradeScale
+    a                       rdfs:Class ;
+    a                       owl:Class ;
+    a                       skos:OrderedCollection ;
+    rdfs:label              "EDAP Generic Grading Scale"@en ;
+    rdfs:comment            "The generic grading scale defined by EDAP. The specific meanings of each grade vary depending on the dimension being measured."@en;
+    skos:memberList         (eodhqa:gradeNotAssessed eodhqa:gradeNotAssessable eodhqa:gradeBasic eodhqa:gradeGood eodhqa:gradeExcellent eodhqa:gradeIdeal)
+    .
+
+
+
+#########################
+# Now we have a grading scale used for the compliance of measured performance
+# with mission claims.
+eodhqa:performanceGradeNotAssessable
+    a                       skos:Concept ;
+    skos:prefLabel          "Not Assessable"@en;
+    skos:definition         "No validation activity performed."@en;
+    skos:broader            eodhqa:gradeNotAssessable
+    .
+
+eodhqa:performanceGradeBasic
+    a                       skos:Concept ;
+    skos:prefLabel          "Basic"@en;
+    skos:definition         "Claimed mission performance shows some agreement with validation results"@en;
+    skos:broader            eodhqa:gradeBasic
+    .
+
+eodhqa:performanceGradeGood
+    a                       skos:Concept ;
+    skos:prefLabel          "Good"@en;
+    skos:definition         "Claimed mission performance shows good agreement with validation results"@en;
+    skos:broader            eodhqa:gradeGood
+    .
+
+eodhqa:performanceGradeExcellent
+    a                       skos:Concept ;
+    skos:prefLabel          "Excellent"@en;
+    skos:definition         "Claimed mission performance shows excellent agreement with validation results. Analysis performed independently of the satellite mission owner"@en;
+    skos:broader            eodhqa:gradeExcellent
+    .
+
+eodhqa:performanceGradeIdeal
+    a                       skos:Concept ;
+    skos:prefLabel          "Ideal"@en;
+    skos:definition         "Claimed mission performance shows excellent agreement with validation results, measurement uncertainties also validated. Analysis performed independently of the satellite mission owner"@en;
+    skos:broader            eodhqa:gradeIdeal
+    .
+
+eodhqa:performanceGradeScale
+    a                       rdfs:Class ;
+    a                       owl:Class ;
+    a                       skos:OrderedCollection ;
+    skos:broader            eodhqa:gradeScale;
+    rdfs:label              "EDAP Grading Scale"@en ;
+    rdfs:comment            "The generic grading scale defined by EDAP. The specific meanings of each grade vary depending on the dimension being measured."@en;
+    skos:memberList         (eodhqa:gradeNotAssessed eodhqa:gradeNotAssessable eodhqa:gradeBasic eodhqa:gradeGood eodhqa:gradeExcellent eodhqa:gradeIdeal)
+    .
+
+
+
+#######################################
+# For some results we get just pass/partial/fail
+eodhqa:pass
+    a                       skos:Concept ;
+    skos:prefLabel          "Pass"@en;
+    skos:definition         "Dataset passes check"@en
+    .
+
+eodhqa:partialPass
+    a                       skos:Concept ;
+    skos:prefLabel          "Partial Pass"@en;
+    skos:definition         "Dataset partially passes check"@en
+    .
+
+eodhqa:fail
+    a                       skos:Concept ;
+    skos:prefLabel          "Fail"@en;
+    skos:definition         "Dataset fails check"@en
+    .
+
+eodhqa:passPartialFailScale
+    a                       rdfs:Class ;
+    a                       owl:Class ;
+    a                       skos:OrderedCollection ;
+    rdfs:label              "Pass/partial pass/fail Grading Scale"@en ;
+    rdfs:comment            "Simple pass, partial pass or fail scale."@en;
+    skos:memberList         (eodhqa:fail eodhqa:partialPass eodhqa:pass)
+    .
+
+
+
+eodhqa:EODHQualityMeasurementDataset
+    a                       owl:Class, rdfs:Class ;
+    rdfs:label              "EODH Quality Measurement Dataset"@en ;
+    rdfs:comment            "Represents a dataset of quality measurements following EODH conventions. A distinguishing feature is that these must be computed on exactly one dataset."@en ;
+    rdfs:subClassOf         dqv:QualityMeasurementDataset
+    .
+
+eodhqa:datasetComputedOn
+    a                       rdf:Property;
+    rdfs:label              "computed on"@en ;
+    rdfs:comment            "Refers to the resource (e.g., a dataset, a linkset, a graph, a set of triples) on which the quality measurement is performed."@en ;
+    rdfs:domain             eodhqa:EODHQualityMeasurementDataset;
+    rdfs:range              dcat:Dataset, dcat:Distribution;
+    .
+
+eodhqa:weblink
+    a                       rdf:Property;
+    rdfs:label              "link"@en ;
+    rdfs:comment            "Link to more information about the quality measurement."@en ;
+    rdfs:domain             eodhqa:EODHQualityMeasurementDataset, dqv:Metric;
+    rdfs:range              eodhweblinks:Weblink;
+    .
+
+eodhqa:detailedResultsLink
+    a                       eodhweblinks:RelationType;
+    rdfs:label              "detailed results" ;
+    rdfs:comment            "Links to a detailed report, in human readable form, which further describe a quality result."
+    .
+
+eodhqa:resultVisualisationLink
+    a                       eodhweblinks:RelationType;
+    rdfs:label              "visualisation" ;
+    rdfs:comment            "Links to a visualisation of quality results."
+    .
+
+eodhqa:validityEnd
+    a                       rdf:Property;
+    rdfs:label              "validity end"@en ;
+    rdfs:comment            "These quality results are considered valid until this date."@en ;
+    rdfs:domain             eodhqa:EODHQualityMeasurementDataset;
+    rdfs:range              xsd:dateTime;
+    .
+

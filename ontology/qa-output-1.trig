@@ -1,0 +1,109 @@
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix dctype: <http://purl.org/dc/dcmitype/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sdo: <http://schema.org/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix vcard: <http://www.w3.org/2006/vcard/ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sdmx-attribute: <http://purl.org/linked-data/sdmx/2009/attribute#> .
+
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix vann:    <http://purl.org/vocab/vann/> .
+@prefix qb:      <http://purl.org/linked-data/cube#> .
+@prefix daq:     <http://purl.org/eis/vocab/daq#> .
+@prefix voaf:    <http://purl.org/vocommons/voaf#> .
+@prefix oa:      <http://www.w3.org/ns/oa#> .
+@prefix duv:     <http://www.w3.org/ns/duv#> .
+
+@prefix dqv:     <http://www.w3.org/ns/dqv#> .
+
+@prefix eodhqa: <https://eodatahub.org.uk/api/ontologies/qa/> .
+@prefix eodh: <https://eodatahub.org.uk/api/ontologies/annotations/> .
+@prefix eodhweblinks: <https://eodatahub.org.uk/api/ontologies/weblinks/> .
+
+@prefix : <https://dev.eodatahub.org.uk/ades/qa-workspace/ogc-api/jobs/7462319b-947c-4900-83a7-5341362cfab6> .
+
+
+_:org
+    a                           prov:Agent, prov:Organization;
+    foaf:name                   "National Physical Laboratory"^^xsd:string
+    .
+
+_:author
+    a                           prov:Agent, prov:Person;
+    foaf:givenName              "S Malone"^^xsd:string;
+    prov:actedOnBehalfOf        _:org
+    .
+
+
+<https://dev.eodatahub.org.uk/ades/qa-workspace/ogc-api/processes/qa-workflow-id-1>
+    # Unsure if this should be an Entity or a SoftwareAgent.
+    a                           prov:Entity
+    .
+
+<https://dev.eodatahub.org.uk/ades/qa-workspace/ogc-api/jobs/7462319b-947c-4900-83a7-5341362cfab6>
+    a                           prov:Activity;
+    prov:used                   <https://dev.eodatahub.org.uk/ades/qa-workspace/ogc-api/processes/qa-workflow-id-1>;
+    prov:wasAssociatedWith      _:author
+    .
+
+
+:qualityCheckResults {
+    :checkRun
+        a                           eodhqa:EODHQualityMeasurementDataset;
+        rdfs:label                  "radiometric uncertainty run 7462319b-947c-4900-83a7-5341362cfab6";
+        owl:sameAs                  <urn:uuid:7462319b-947c-4900-83a7-5341362cfab6>;
+        eodhqa:datasetComputedOn    <https://dev.eodatahub.org.uk/api/catalogue/stac/catalogs/supported-datasets/ceda-stac-fastapi/collections/sentinel1_l1c> ;
+        eodhqa:validityEnd          "2025-01-25T04:10:00Z"^^xsd:dateTime;
+        eodhqa:weblink              :refDetailedResults, :refVisualisation
+        .
+
+    # This isn't in NPL's example but I'm expecting more information than pass/partial/fail
+    :snrCheck1
+        a                           dqv:QualityMeasurement ;
+        sdmx-attribute:unitMeasure  <http://www.ontology-of-units-of-measure.org/resource/om-2/decibel> ;
+        dqv:isMeasurementOf         :snrMetric ;
+        dqv:computedOn              <https://dev.eodatahub.org.uk/api/catalogue/stac/catalogs/supported-datasets/ceda-stac-fastapi/collections/sentinel1_l1c> ;
+        qb:dataSet                  :checkRun ;
+        dqv:value                   100
+        .
+
+
+    :radiometricUncertaintyCheckPF
+        a                           dqv:QualityMeasurement;
+        dqv:isMeasurementOf         eodhqa:radiomtricUncertainty;
+        dqv:computedOn              <https://dev.eodatahub.org.uk/api/catalogue/stac/catalogs/supported-datasets/ceda-stac-fastapi/collections/sentinel1_l1c> ;
+        qb:DataSet                  :checkRun ;
+        # These values aren't defined yet in qa-ontology.ttl - need to know what these should be
+        sdmx-attribute:unitMeasure  eodhqa:passPartialFail;
+        dqv:value                   eodhqa:pass
+        .
+    
+    :refDetailedResults
+        a                           eodhweblinks:Weblink;
+        eodhweblinks:type           <https://www.iana.org/assignments/media-types/application/pdf>;
+        eodhweblinks:rel            eodhqa:detailedResultsLink;
+        eodhweblinks:title          "Detailed Results"@en;
+        eodhweblinks:href           "https://qa-workspace.eodatahub-workspaces.org.uk/files/workflow-outputs/7462319b-947c-4900-83a7-5341362cfab6/report.pdf"
+        .
+
+    :refVisualisation
+        a                           eodhweblinks:Weblink;
+        eodhweblinks:type           <https://www.iana.org/assignments/media-types/text/html>;
+        eodhweblinks:rel            eodhqa:resultVisualisationLink;
+        eodhweblinks:title          "Visualition of results"@en;
+        eodhweblinks:href           "https://qa-workspace.eodatahub-workspaces.org.uk/files/workflow-outputs/7462319b-947c-4900-83a7-5341362cfab6/vis.html"
+        .
+}
+
+:qualityCheckResults
+    a                           dqv:QualityMetadata, prov:Entity ;
+    prov:generatedAtTime        "2024-07-26T16:10:00Z"^^xsd:dateTime ;
+    prov:wasGeneratedBy         <https://dev.eodatahub.org.uk/ades/qa-workspace/ogc-api/jobs/7462319b-947c-4900-83a7-5341362cfab6>;
+    prov:wasAttributedTo        _:author;
+    .

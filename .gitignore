@@ -162,4 +162,9 @@ cython_debug/
 
 
 *.bak
+/scratch
 
+.make-venv-installed
+
+# Cannot currently be ignored due to this needing a newer Black with Python 3.12 support.
+#.pre-commit-config.yaml
