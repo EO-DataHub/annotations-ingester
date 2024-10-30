@@ -52,7 +52,7 @@ classifiers = [
   # "License :: Other/Proprietary License",
 
   "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3 :: Only",
 ]
 
@@ -125,11 +125,11 @@ packages = ["annotations_ingester"]
 
 [tool.black]
 line-length = 100
-target-version = ['py311']
+target-version = ['py312']
 
 [tool.ruff]
 line-length = 110
-target-version = "py311"
+target-version = "py312"
 lint.select = ["E", "F", "B", "W"]
 
 exclude = [
