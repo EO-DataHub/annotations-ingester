@@ -8,9 +8,9 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
     apt-get update -y && apt-get upgrade -y
 
-WORKDIR /CHANGME-component-name
+WORKDIR /annotations-ingester
 ADD LICENSE.txt requirements.txt ./
-ADD CHANGEME-module-name ./CHANGEME-module-name/
+ADD annotations-ingester ./annotations-ingester/
 ADD pyproject.toml ./
 RUN --mount=type=cache,target=/root/.cache/pip pip3 install -r requirements.txt .
 
