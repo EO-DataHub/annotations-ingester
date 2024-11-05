@@ -151,9 +151,7 @@ def run(messagers_dict: dict, subscription_name: str):
     pulsar_url = os.environ.get("PULSAR_URL")
     client = Client(pulsar_url)
 
-    topics = messagers_dict.keys()
-
-    print(topics)
+    topics = list(messagers_dict.keys())
 
     consumer = client.subscribe(topic=topics, subscription_name=subscription_name)
 
