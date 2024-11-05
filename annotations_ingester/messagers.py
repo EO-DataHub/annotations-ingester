@@ -153,7 +153,7 @@ def run(messagers_dict: dict, subscription_name: str):
 
     topics = messagers_dict.keys()
 
-    consumer = client.subscribe(topic=topics, subscription_name=subscription_name)
+    consumer = client.subscribe(topic=(topics), subscription_name=subscription_name)
 
     while True:
         pulsar_message = consumer.receive()
