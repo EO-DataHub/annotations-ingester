@@ -158,7 +158,7 @@ def run(messagers_dict: dict, subscription_name: str):
     while True:
         pulsar_message = consumer.receive()
 
-        messager = messagers_dict[pulsar_message.topic_name]
+        messager = messagers_dict[pulsar_message.topic_name()]
 
         failures = messager.consume(pulsar_message)
 
