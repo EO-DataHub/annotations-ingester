@@ -1,6 +1,9 @@
 import dataclasses
+import os
 from abc import ABC, abstractmethod
 from typing import Sequence
+
+from pulsar import Client
 
 
 class Messager[MSGTYPE](ABC):
@@ -125,3 +128,42 @@ class CatalogueSTACChangeMessager(Messager, ABC):
     def process_delete(
         self, bucket: str, key: str, id: str, source: str, target: str
     ) -> Sequence[Messager.Action]: ...
+
+    def process_msg(self):
+        pass
+
+    def process_delete(self):
+        pass
+
+    def process_stac_update(
+        self,
+        cat_path: str,
+        stac: dict,
+        **kwargs,
+    ) -> Sequence[Messager.Action]:
+        pass
+
+
+
+
+def run(messagers_dict: dict, subscription_name: str):
+
+    pulsar_url = os.environ.get("PULSAR_URL")
+    client = Client(pulsar_url)
+
+    topics = messagers_dict.keys()
+
+    consumer = client.subscribe(topics, subscription_name=subscription_name)
+
+    while True:
+        pulsar_message = consumer.receive()
+
+        messager = messagers_dict[pulsar_message.topic_name]
+
+        failures = messager.consume(pulsar_message)
+
+        if failures.permanent:
+            pulsar_message.negative_acknowledge()
+            raise Exception
+        else:
+            pulsar_message.acknowledge()
