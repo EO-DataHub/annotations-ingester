@@ -1,7 +1,8 @@
 import os
 
 from annotations_ingester.annotations_generator import AnnotationsMessager
-from annotations_ingester.messagers import CatalogueSTACChangeMessager, run
+from eodhp_utils.messagers import CatalogueSTACChangeMessager
+from eodhp_utils.runner import run
 
 
 def main():

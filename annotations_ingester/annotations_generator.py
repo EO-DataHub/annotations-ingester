@@ -1,17 +1,11 @@
 import logging
+import os
 import re
-import sys
-from pathlib import Path
 from typing import Sequence
 
-import boto3
-import botocore
-import pystac
-from pulsar import Message
-from pystac import Catalog, Collection, STACTypeError
-from rdflib import DCAT, DCTERMS, RDF, Graph, Literal, URIRef
+from eodhp_utils.messagers import CatalogueSTACChangeMessager, Messager
 
-from annotations_ingester.messagers import CatalogueSTACChangeMessager, Messager
+import boto3
 
 from rdflib import Graph
 
@@ -36,7 +30,9 @@ def convert_format(file_path: str, format: str):
     return g.serialize(format=format)
 
 
-def download_s3_file(file_name: str, bucket: str, s3_client):#, file_path: str):
+def download_s3_file(file_name: str):#, file_path: str):
+    bucket = os.environ.get("S3_BUCKET")
+    s3_client = boto3.client("s3")
     s3_client.download_file(bucket, file_name, file_name)
     file_contents = open(file_name).read()
 
@@ -53,7 +49,7 @@ class AnnotationsMessager(CatalogueSTACChangeMessager):
     Generates basic DCAT for catalogue entries. Supports Catalogs and Collections and is
     intended only to be sufficient for finding QA information linked to a dataset.
 
-    The output is sent to the catalogue public static files bucket under a path matching the
+    The output is sent to the cataloge public static files bucket under a path matching the
     catalogue API endpoint for the dataset. For example:
         /catalogue/
     """
@@ -78,23 +74,27 @@ class AnnotationsMessager(CatalogueSTACChangeMessager):
         else:
             cache_control_header_length = 0
 
+        file_contents = download_s3_file(f"transformed/{cat_path}")
+
         all_actions.append(
             Messager.S3UploadAction(
                 bucket=self._dest_bucket,
                 key=CATALOGUE_PUBLIC_BUCKET_PREFIX + cat_path + ".ttl",
-                file_body=convert_format(stac, 'turtle'),
+                file_body=convert_format(file_contents, 'turtle'),
                 mime_type="text/turtle",
             ))
         all_actions.append(
             Messager.S3UploadAction(
                 bucket=self._dest_bucket,
                 key=CATALOGUE_PUBLIC_BUCKET_PREFIX + cat_path + ".jsonld",
-                file_body=convert_format(stac, 'json_ld'),
+                file_body=convert_format(file_contents, 'json_ld'),
                 mime_type="application/ld+json",
             )
         )
 
+
         return all_actions
+
 
 
 
@@ -104,78 +104,78 @@ class AnnotationsMessager(CatalogueSTACChangeMessager):
     #     asks the implementation (in a task-specific subclass) to process each one separately.
     #     The set of actions is then returned for the superclass to run.
     #     """
-        harvest_schema = eodhp_utils.pulsar.messages.generate_harvest_schema()
-        input_change_msg = eodhp_utils.pulsar.messages.get_message_data(msg, harvest_schema)
-
-        # Does anything need this? Maybe configure the logger with it?
-        # id = input_change_msg.get("id")
-        input_bucket = input_change_msg.get("bucket_name")
-        source = input_change_msg.get("source")
-        target = input_change_msg.get("target")
-
-        s3_client = boto3.client('s3')
-
-        all_actions = []
-        for change_type in ("added_keys",):#, "updated_keys", "deleted_keys"):
-            for key in input_change_msg.get(change_type):
-                # The key in the source bucket has format
-                # "<harvest-pipeline-component>/<catalogue-path>"
-                #
-                # These two pieces must be separated.
-                previous_step_prefix, cat_path = key.split("/", 1)
-
-                try:
-                    if change_type == "added_keys":
-                        # Updated or added.
-
-                        file_contents = download_s3_file(key, input_bucket, s3_client)
-
-                        if is_file_immutable(file_contents):
-                            cache_control_header_length = 60*60*24*7  # seconds in a week
-                        else:
-                            cache_control_header_length = 0
-
-
-                        # entry_actions = self.process_update(
-                        #     input_bucket,
-                        #     key,
-                        #     cat_path,
-                        #     source,
-                        #     target,
-                        # )
-
-                        all_actions.append(
-                            Messager.S3UploadAction(
-                                bucket=self._dest_bucket,
-                                key=CATALOGUE_PUBLIC_BUCKET_PREFIX + cat_path + ".ttl",
-                                file_body=convert_format(file_contents, 'turtle'),
-                                mime_type="text/turtle",
-                            ))
-                        all_actions.append(
-                            Messager.S3UploadAction(
-                                bucket=self._dest_bucket,
-                                key=CATALOGUE_PUBLIC_BUCKET_PREFIX + cat_path + ".jsonld",
-                                file_body=convert_format(file_contents, 'json_ld'),
-                                mime_type="application/ld+json",
-                            )
-                        )
-
-                    logging.debug(f"{all_actions=}")
-                except (botocore.exceptions.BotoCoreError, botocore.exceptions.ClientError) as e:
-                    if eodhp_utils.messagers._is_boto_error_temporary(e):
-                        logging.exception(f"Temporary Boto error for {key=}")
-                        all_actions.append(Messager.FailureAction(key=key, permanent=False))
-                    else:
-                        logging.exception(f"Permanent Boto error for {key=}")
-                        all_actions.append(Messager.FailureAction(key=key, permanent=True))
-                except eodhp_utils.messagers.TemporaryFailure:
-                    logging.exception(f"TemporaryFailure processing {key=}")
-                    all_actions.append(Messager.FailureAction(key=key, permanent=False))
-                except Exception:
-                    logging.exception(f"Exception processing {key=}")
-                    all_actions.append(Messager.FailureAction(key=key, permanent=True))
-
-        return all_actions
+    #     harvest_schema = eodhp_utils.pulsar.messages.generate_harvest_schema()
+    #     input_change_msg = eodhp_utils.pulsar.messages.get_message_data(msg, harvest_schema)
+    #
+    #     # Does anything need this? Maybe configure the logger with it?
+    #     # id = input_change_msg.get("id")
+    #     input_bucket = input_change_msg.get("bucket_name")
+    #     source = input_change_msg.get("source")
+    #     target = input_change_msg.get("target")
+    #
+    #     s3_client = boto3.client('s3')
+    #
+    #     all_actions = []
+    #     for change_type in ("added_keys",):#, "updated_keys", "deleted_keys"):
+    #         for key in input_change_msg.get(change_type):
+    #             # The key in the source bucket has format
+    #             # "<harvest-pipeline-component>/<catalogue-path>"
+    #             #
+    #             # These two pieces must be separated.
+    #             previous_step_prefix, cat_path = key.split("/", 1)
+    #
+    #             try:
+    #                 if change_type == "added_keys":
+    #                     # Updated or added.
+    #
+    #                     file_contents = download_s3_file(key, input_bucket, s3_client)
+    #
+    #                     if is_file_immutable(file_contents):
+    #                         cache_control_header_length = 60*60*24*7  # seconds in a week
+    #                     else:
+    #                         cache_control_header_length = 0
+    #
+    #
+    #                     # entry_actions = self.process_update(
+    #                     #     input_bucket,
+    #                     #     key,
+    #                     #     cat_path,
+    #                     #     source,
+    #                     #     target,
+    #                     # )
+    #
+    #                     all_actions.append(
+    #                         Messager.S3UploadAction(
+    #                             bucket=self._dest_bucket,
+    #                             key=CATALOGUE_PUBLIC_BUCKET_PREFIX + cat_path + ".ttl",
+    #                             file_body=convert_format(file_contents, 'turtle'),
+    #                             mime_type="text/turtle",
+    #                         ))
+    #                     all_actions.append(
+    #                         Messager.S3UploadAction(
+    #                             bucket=self._dest_bucket,
+    #                             key=CATALOGUE_PUBLIC_BUCKET_PREFIX + cat_path + ".jsonld",
+    #                             file_body=convert_format(file_contents, 'json_ld'),
+    #                             mime_type="application/ld+json",
+    #                         )
+    #                     )
+    #
+    #                 logging.debug(f"{all_actions=}")
+    #             except (botocore.exceptions.BotoCoreError, botocore.exceptions.ClientError) as e:
+    #                 if eodhp_utils.messagers._is_boto_error_temporary(e):
+    #                     logging.exception(f"Temporary Boto error for {key=}")
+    #                     all_actions.append(Messager.FailureAction(key=key, permanent=False))
+    #                 else:
+    #                     logging.exception(f"Permanent Boto error for {key=}")
+    #                     all_actions.append(Messager.FailureAction(key=key, permanent=True))
+    #             except eodhp_utils.messagers.TemporaryFailure:
+    #                 logging.exception(f"TemporaryFailure processing {key=}")
+    #                 all_actions.append(Messager.FailureAction(key=key, permanent=False))
+    #             except Exception:
+    #                 logging.exception(f"Exception processing {key=}")
+    #                 all_actions.append(Messager.FailureAction(key=key, permanent=True))
+    #
+    #     return all_actions
 
     #
     # def add_cache_control_header(self):
