@@ -21,9 +21,6 @@ class DatasetDCATMessager(CatalogueSTACChangeMessager):
         /catalogue/
     """
 
-    def __init__(self, catalogue_public_bucket: str):
-        self._dest_bucket = catalogue_public_bucket
-
     def process_update_stac(
         self,
         cat_path: str,
@@ -43,13 +40,11 @@ class DatasetDCATMessager(CatalogueSTACChangeMessager):
             #  /api/catalogue/stac/catalogs/my-catalog/collections/collection.jsonld
             return (
                 Messager.S3UploadAction(
-                    bucket=self._dest_bucket,
                     key=CATALOGUE_PUBLIC_BUCKET_PREFIX + cat_path + ".ttl",
                     file_body=ld_ttl,
                     mime_type="text/turtle",
                 ),
                 Messager.S3UploadAction(
-                    bucket=self._dest_bucket,
                     key=CATALOGUE_PUBLIC_BUCKET_PREFIX + cat_path + ".jsonld",
                     file_body=ld_jsonld,
                     mime_type="application/ld+json",

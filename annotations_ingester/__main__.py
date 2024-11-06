@@ -1,4 +1,7 @@
+import logging
 import os
+
+import boto3
 
 from annotations_ingester.dataset_dcat_generator import DatasetDCATMessager
 from eodhp_utils.messagers import CatalogueSTACChangeMessager
@@ -13,9 +16,20 @@ def main():
     else:
         identifier = ""
 
+    if os.getenv("AWS_ACCESS_KEY") and os.getenv("AWS_SECRET_ACCESS_KEY"):
+        session = boto3.session.Session(
+            aws_access_key_id=os.environ["AWS_ACCESS_KEY"],
+            aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"],
+        )
+        s3_client = session.client("s3")
+    else:
+        s3_client = boto3.client("s3")
+    logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
+
     destination_bucket = os.environ.get('S3_BUCKET')
-    annotations_messager = AnnotationsMessager(destination_bucket)
-    datasets_messager = DatasetDCATMessager(destination_bucket)
+
+    annotations_messager = AnnotationsMessager(s3_client=s3_client, output_bucket=destination_bucket)
+    datasets_messager = DatasetDCATMessager(s3_client=s3_client, output_bucket=destination_bucket)
 
     run(
         {
