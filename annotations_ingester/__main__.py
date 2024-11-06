@@ -1,5 +1,6 @@
 import os
 
+from annotations_ingester.dataset_dcat_generator import DatasetDCATMessager
 from eodhp_utils.messagers import CatalogueSTACChangeMessager
 from eodhp_utils.runner import run
 
@@ -12,8 +13,9 @@ def main():
     else:
         identifier = ""
 
-    annotations_messager = AnnotationsMessager("hc-test-bucket-can-be-deleted")
-    datasets_messager = CatalogueSTACChangeMessager()
+    destination_bucket = os.environ.get('S3_BUCKET')
+    annotations_messager = AnnotationsMessager(destination_bucket)
+    datasets_messager = DatasetDCATMessager(destination_bucket)
 
     run(
         {

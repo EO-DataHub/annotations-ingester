@@ -29,8 +29,7 @@ def convert_format(file_path: str, format: str):
     return g.serialize(format=format)
 
 
-def download_s3_file(file_name: str):  # , file_path: str):
-    bucket = os.environ.get("S3_BUCKET")
+def download_s3_file(file_name: str, bucket):  # , file_path: str):
     s3_client = boto3.client("s3")
     s3_client.download_file(bucket, file_name, file_name)
     file_contents = open(file_name).read()
@@ -73,7 +72,7 @@ class AnnotationsMessager(CatalogueSTACChangeMessager):
         else:
             cache_control_header_length = 0
 
-        file_contents = download_s3_file(f"transformed/{cat_path}")
+        file_contents = download_s3_file(f"transformed/{cat_path}", self._dest_bucket)
 
         all_actions.append(
             Messager.S3UploadAction(
