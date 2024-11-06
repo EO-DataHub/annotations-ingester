@@ -46,9 +46,6 @@ class AnnotationsMessager(CatalogueChangeBodyMessager):
         /catalogue/
     """
 
-    def __init__(self, catalogue_public_bucket: str):
-        self._dest_bucket = catalogue_public_bucket
-
     def process_delete(self):
         pass
 
