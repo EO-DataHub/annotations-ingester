@@ -53,7 +53,7 @@ class AnnotationsMessager(CatalogueSTACChangeMessager):
     Generates basic DCAT for catalogue entries. Supports Catalogs and Collections and is
     intended only to be sufficient for finding QA information linked to a dataset.
 
-    The output is sent to the cataloge public static files bucket under a path matching the
+    The output is sent to the catalogue public static files bucket under a path matching the
     catalogue API endpoint for the dataset. For example:
         /catalogue/
     """
@@ -64,22 +64,46 @@ class AnnotationsMessager(CatalogueSTACChangeMessager):
     def process_delete(self):
         pass
 
-    def process_stac_update(
+    def process_update_stac(
         self,
         cat_path: str,
         stac: dict,
         **kwargs,
     ) -> Sequence[Messager.Action]:
-        pass
+
+        all_actions = []
+
+        if is_file_immutable(cat_path):
+            cache_control_header_length = 60 * 60 * 24 * 7  # seconds in a week
+        else:
+            cache_control_header_length = 0
+
+        all_actions.append(
+            Messager.S3UploadAction(
+                bucket=self._dest_bucket,
+                key=CATALOGUE_PUBLIC_BUCKET_PREFIX + cat_path + ".ttl",
+                file_body=convert_format(stac, 'turtle'),
+                mime_type="text/turtle",
+            ))
+        all_actions.append(
+            Messager.S3UploadAction(
+                bucket=self._dest_bucket,
+                key=CATALOGUE_PUBLIC_BUCKET_PREFIX + cat_path + ".jsonld",
+                file_body=convert_format(stac, 'json_ld'),
+                mime_type="application/ld+json",
+            )
+        )
+
+        return all_actions
 
 
 
-    def process_msg(self, msg: Message) -> Sequence[Messager.Action]:
-        """
-        This processes an input catalogue change message, loops over each changed entry in it,
-        asks the implementation (in a task-specific subclass) to process each one separately.
-        The set of actions is then returned for the superclass to run.
-        """
+    # def process_msg(self, msg: Message) -> Sequence[Messager.Action]:
+    #     """
+    #     This processes an input catalogue change message, loops over each changed entry in it,
+    #     asks the implementation (in a task-specific subclass) to process each one separately.
+    #     The set of actions is then returned for the superclass to run.
+    #     """
         harvest_schema = eodhp_utils.pulsar.messages.generate_harvest_schema()
         input_change_msg = eodhp_utils.pulsar.messages.get_message_data(msg, harvest_schema)
 
