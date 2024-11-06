@@ -42,7 +42,7 @@ cryptography==43.0.3
     # via moto
 distlib==0.3.8
     # via virtualenv
-eodhp-utils @ git+https://github.com/UKEODHP/eodhp-utils@EODHP-643-and-644-messagers
+eodhp-utils @ git+https://github.com/UKEODHP/eodhp-utils@EODHP-643-run
     # via annotations-ingester (pyproject.toml)
 execnet==2.1.1
     # via pytest-xdist

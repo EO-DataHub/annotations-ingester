@@ -68,7 +68,7 @@ dependencies = [
     "botocore",
     "rdflib",
     "pystac",
-    "eodhp-utils @ git+https://github.com/UKEODHP/eodhp-utils@EODHP-643-and-644-messagers",
+    "eodhp-utils @ git+https://github.com/UKEODHP/eodhp-utils@EODHP-643-run",
 ]
 
 # List additional groups of dependencies here (e.g. development
