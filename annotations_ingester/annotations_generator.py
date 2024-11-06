@@ -3,25 +3,24 @@ import os
 import re
 from typing import Sequence
 
-from eodhp_utils.messagers import CatalogueSTACChangeMessager, Messager
-
 import boto3
-
+from eodhp_utils.messagers import CatalogueSTACChangeMessager, Messager
 from rdflib import Graph
-
 
 CATALOGUE_PUBLIC_BUCKET_PREFIX = "/catalogs/supported-datasets/ceda-stac-catalogue/collections/"
 
 
 def is_file_immutable(file_contents):
     lowercase = file_contents.lower()
-    if 'uuid' in lowercase and re.search('[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}', lowercase):
+    if re.search(
+        "[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}",
+        lowercase,
+    ):
         logging.info("File is immutable")
         return True
 
     logging.info("File is not immutable")
     return False
-
 
 
 def convert_format(file_path: str, format: str):
@@ -30,7 +29,7 @@ def convert_format(file_path: str, format: str):
     return g.serialize(format=format)
 
 
-def download_s3_file(file_name: str):#, file_path: str):
+def download_s3_file(file_name: str):  # , file_path: str):
     bucket = os.environ.get("S3_BUCKET")
     s3_client = boto3.client("s3")
     s3_client.download_file(bucket, file_name, file_name)
@@ -80,23 +79,20 @@ class AnnotationsMessager(CatalogueSTACChangeMessager):
             Messager.S3UploadAction(
                 bucket=self._dest_bucket,
                 key=CATALOGUE_PUBLIC_BUCKET_PREFIX + cat_path + ".ttl",
-                file_body=convert_format(file_contents, 'turtle'),
+                file_body=convert_format(file_contents, "turtle"),
                 mime_type="text/turtle",
-            ))
+            )
+        )
         all_actions.append(
             Messager.S3UploadAction(
                 bucket=self._dest_bucket,
                 key=CATALOGUE_PUBLIC_BUCKET_PREFIX + cat_path + ".jsonld",
-                file_body=convert_format(file_contents, 'json_ld'),
+                file_body=convert_format(file_contents, "json_ld"),
                 mime_type="application/ld+json",
             )
         )
 
-
         return all_actions
-
-
-
 
     # def process_msg(self, msg: Message) -> Sequence[Messager.Action]:
     #     """
