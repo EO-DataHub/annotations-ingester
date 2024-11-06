@@ -24,7 +24,7 @@ class DatasetDCATMessager(CatalogueSTACChangeMessager):
     def __init__(self, catalogue_public_bucket: str):
         self._dest_bucket = catalogue_public_bucket
 
-    def process_stac_update(
+    def process_update_stac(
         self,
         cat_path: str,
         stac: dict,
