@@ -33,7 +33,7 @@ class DatasetDCATMessager(CatalogueSTACChangeMessager):
         ld_graph = self.generate_dcat(stac)
 
         if ld_graph is None:
-            return None
+            return []
         else:
             ld_ttl = ld_graph.serialize(format="turtle")
             ld_jsonld = ld_graph.serialize(format="json-ld")

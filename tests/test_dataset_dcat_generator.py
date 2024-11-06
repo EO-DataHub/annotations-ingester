@@ -131,7 +131,7 @@ def mock_catalog():
 def test_ignores_irrelevant_entries(fake_entry):
     messager = DatasetDCATMessager(None)
 
-    actions = messager.process_stac_update(cat_path="/a/b", stac=fake_entry)
+    actions = messager.process_update_stac(cat_path="/a/b", stac=fake_entry)
 
     assert actions is None
 
@@ -141,7 +141,7 @@ def process_stac_to_graph(stac: dict) -> Graph:
     and returned."""
     messager = DatasetDCATMessager(None)
 
-    actions = messager.process_stac_update(
+    actions = messager.process_update_stac(
         cat_path="/cat/path",
         stac=copy.deepcopy(stac),
     )
