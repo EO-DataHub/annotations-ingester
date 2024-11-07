@@ -33,7 +33,8 @@ class AnnotationsMessager(CatalogueChangeBodyMessager):
     ) -> Sequence[Messager.Action]:
 
         with tempfile.NamedTemporaryFile() as tf:
-            tf.write(json.dumps(entry_body).encode('utf-8'))
+            print(entry_body)
+            tf.write(str(entry_body))
             graph = Graph()
             graph.parse(tf.name)
 
