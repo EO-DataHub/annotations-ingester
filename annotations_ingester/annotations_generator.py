@@ -4,7 +4,6 @@ import re
 import tempfile
 from typing import Sequence
 
-import boto3
 from eodhp_utils.messagers import Messager, CatalogueChangeBodyMessager
 from rdflib import Graph
 
