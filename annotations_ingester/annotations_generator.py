@@ -33,8 +33,7 @@ class AnnotationsMessager(CatalogueChangeBodyMessager):
     ) -> Sequence[Messager.Action]:
 
         with tempfile.NamedTemporaryFile() as tf:
-            print(entry_body)
-            tf.write(str(entry_body))
+            tf.write(entry_body)
             graph = Graph()
             graph.parse(tf.name)
 
