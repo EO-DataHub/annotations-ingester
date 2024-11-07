@@ -1,5 +1,6 @@
 import json
 import logging
+import os
 import re
 import tempfile
 from typing import Sequence
@@ -50,6 +51,7 @@ class AnnotationsMessager(CatalogueChangeBodyMessager):
             jsonld = graph.serialize(format="json-ld")
 
             key_root = f"/catalogues/{short_path}/annotations/{uuid}"
+            bucket = os.environ.get("S3_BUCKET")
 
             return [
                 Messager.S3UploadAction(
@@ -57,12 +59,14 @@ class AnnotationsMessager(CatalogueChangeBodyMessager):
                     file_body=turtle,
                     mime_type="text/turtle",
                     cache_control=str(cache_control),
+                    bucket=bucket,
                 ),
                 Messager.S3UploadAction(
                     key=key_root + ".jsonld",
                     file_body=jsonld,
                     mime_type="application/ld+json",
                     cache_control=str(cache_control),
+                    bucket=bucket,
                 )
             ]
 
