@@ -8,21 +8,21 @@ attrs==24.2.0
     # via
     #   jsonschema
     #   referencing
-black==24.8.0
+black==24.10.0
     # via annotations-ingester (pyproject.toml)
-boto3==1.35.43
+boto3==1.35.54
     # via
     #   annotations-ingester (pyproject.toml)
     #   eodhp-utils
     #   moto
-botocore==1.35.43
+botocore==1.35.54
     # via
     #   annotations-ingester (pyproject.toml)
     #   boto3
     #   eodhp-utils
     #   moto
     #   s3transfer
-build==1.2.2
+build==1.2.2.post1
     # via pip-tools
 certifi==2024.8.30
     # via
@@ -40,7 +40,7 @@ click==8.1.7
     #   pip-tools
 cryptography==43.0.3
     # via moto
-distlib==0.3.8
+distlib==0.3.9
     # via virtualenv
 eodhp-utils @ git+https://github.com/UKEODHP/eodhp-utils@EODHP-643-run
     # via annotations-ingester (pyproject.toml)
@@ -50,8 +50,6 @@ fastjsonschema==2.20.0
     # via validate-pyproject
 filelock==3.16.1
     # via virtualenv
-html5lib-modern==1.2
-    # via rdflib
 identify==2.6.1
     # via pre-commit
 idna==3.10
@@ -96,7 +94,7 @@ platformdirs==4.3.6
     #   virtualenv
 pluggy==1.5.0
     # via pytest
-pre-commit==3.8.0
+pre-commit==4.0.1
     # via annotations-ingester (pyproject.toml)
 pulsar-client==3.5.0
     # via
@@ -132,7 +130,7 @@ pyyaml==6.0.2
     # via
     #   pre-commit
     #   responses
-rdflib==7.1.0
+rdflib==7.1.1
     # via annotations-ingester (pyproject.toml)
 referencing==0.35.1
     # via
@@ -144,28 +142,28 @@ requests==2.32.3
     #   responses
 responses==0.25.3
     # via moto
-rpds-py==0.20.0
+rpds-py==0.21.0
     # via
     #   jsonschema
     #   referencing
-ruff==0.6.8
+ruff==0.7.2
     # via annotations-ingester (pyproject.toml)
 s3transfer==0.10.3
     # via boto3
 six==1.16.0
     # via python-dateutil
-trove-classifiers==2024.10.16
+trove-classifiers==2024.10.21.16
     # via validate-pyproject
 urllib3==2.2.3
     # via
     #   botocore
     #   requests
     #   responses
-validate-pyproject[all]==0.21
+validate-pyproject[all]==0.22
     # via annotations-ingester (pyproject.toml)
-virtualenv==20.26.6
+virtualenv==20.27.1
     # via pre-commit
-watchdog==5.0.3
+watchdog==6.0.0
     # via pytest-watcher
 werkzeug==3.1.2
     # via moto

@@ -23,14 +23,16 @@ class DatasetDCATMessager(CatalogueSTACChangeMessager):
 
     def process_update_stac(
         self,
-        cat_path: str,
         stac: dict,
+        cat_path: str,
+        source: str,
+        target: str,
         **kwargs,
     ) -> Sequence[Messager.Action]:
         ld_graph = self.generate_dcat(stac)
 
         if ld_graph is None:
-            return ()
+            return []
         else:
             ld_ttl = ld_graph.serialize(format="turtle")
             ld_jsonld = ld_graph.serialize(format="json-ld")
@@ -100,12 +102,8 @@ class DatasetDCATMessager(CatalogueSTACChangeMessager):
 
         return g
 
-    # These are here because we have only a stub for Messager with no implemetations.
-    # An intermediate subclass will implement these in a real version.
-    def process_msg(self, msg) -> Sequence[Messager.Action]:
-        return None
 
     def process_delete(
         self, bucket: str, key: str, id: str, source: str, target: str
     ) -> Sequence[Messager.Action]:
-        return None
+        return []

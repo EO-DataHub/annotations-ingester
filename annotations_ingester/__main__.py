@@ -4,7 +4,6 @@ import os
 import boto3
 
 from annotations_ingester.dataset_dcat_generator import DatasetDCATMessager
-from eodhp_utils.messagers import CatalogueSTACChangeMessager
 from eodhp_utils.runner import run
 
 from annotations_ingester.annotations_generator import AnnotationsMessager
@@ -34,7 +33,7 @@ def main():
     run(
         {
             "transformed-annotations": annotations_messager,
-            f"harvested{identifier}": datasets_messager,
+            f"transformed{identifier}": datasets_messager,
         },
         "annotations-ingester",
     )

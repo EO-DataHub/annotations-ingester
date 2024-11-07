@@ -1,6 +1,7 @@
+import json
 import logging
-import os
 import re
+import tempfile
 from typing import Sequence
 
 import boto3
@@ -10,70 +11,68 @@ from rdflib import Graph
 CATALOGUE_PUBLIC_BUCKET_PREFIX = "/catalogs/supported-datasets/ceda-stac-catalogue/collections/"
 
 
-def is_file_immutable(file_contents):
-    lowercase = file_contents.lower()
-    if re.search(
-        "[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}",
-        lowercase,
-    ):
-        logging.info("File is immutable")
-        return True
-
-    logging.info("File is not immutable")
-    return False
-
-
-def download_s3_file(file_name: str, bucket):  # , file_path: str):
-    s3_client = boto3.client("s3")
-    s3_client.download_file(bucket, file_name, file_name)
-    file_contents = open(file_name).read()
-
-    return file_contents
-
-    # output_file = Path(file_path)
-    # output_file.parent.mkdir(exist_ok=True, parents=True)
-    # with open(file_path, 'w') as f:
-    #     f.write(file_contents)
-
-
 class AnnotationsMessager(CatalogueChangeBodyMessager):
     """
     Generates basic DCAT for catalogue entries. Supports Catalogs and Collections and is
     intended only to be sufficient for finding QA information linked to a dataset.
 
-    The output is sent to the cataloge public static files bucket under a path matching the
+    The output is sent to the catalogue public static files bucket under a path matching the
     catalogue API endpoint for the dataset. For example:
         /catalogue/
     """
 
-    def process_delete(self):
-        pass
+    def process_delete(self, **kwargs):
+        return []
 
     def process_update_body(
         self,
         entry_body: dict,
         cat_path: str,
+        source: str,
+        target: str,
         **kwargs,
     ) -> Sequence[Messager.Action]:
 
+        with tempfile.NamedTemporaryFile() as tf:
+            tf.write(json.dumps(entry_body).encode('utf-8'))
+            graph = Graph()
+            graph.parse(tf.name)
 
-        g = Graph()
-        g.parse(entry_body)
+            uuid = get_uuid_from_graph(entry_body)
 
-        uuid = '000000-0000-0000-000000' #get_uuid_from_graph()
+            if uuid:
+                cache_control = 60*60*24*7 # 1 week
+            else:
+                cache_control = 0
 
-        turtle = g.serialize(format="turtle")
-        jsonld = g.serialize(format="json_ld")
+            turtle = graph.serialize(format="turtle")
+            jsonld = graph.serialize(format="json-ld")
 
-        return [
-            Messager.S3UploadAction(
-                key=CATALOGUE_PUBLIC_BUCKET_PREFIX + cat_path + f"/annotations/{uuid}.ttl",
-                file_body=turtle,
-                mime_type="text/turtle",
-            ),
-            Messager.S3UploadAction(
-                key=CATALOGUE_PUBLIC_BUCKET_PREFIX + cat_path + f"/annotations/{uuid}.jsonld",
-                file_body=jsonld,
-                mime_type="application/ld+json",
-            )
-        ]
+            key_root = CATALOGUE_PUBLIC_BUCKET_PREFIX + cat_path + f"/annotations/{uuid}"
+
+            return [
+                Messager.S3UploadAction(
+                    key=key_root + ".ttl",
+                    file_body=turtle,
+                    mime_type="text/turtle",
+                    cache_control=str(cache_control),
+                ),
+                Messager.S3UploadAction(
+                    key=key_root + ".jsonld",
+                    file_body=jsonld,
+                    mime_type="application/ld+json",
+                    cache_control=str(cache_control),
+                )
+            ]
+
+
+def get_uuid_from_graph(file_contents):
+
+    link = file_contents.get("links")[0].get("href")
+
+    uuid = re.search("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}", link.lower())
+
+    if uuid is None:
+        logging.error("UUID not found")
+
+    return uuid.group()
