@@ -47,7 +47,7 @@ class AnnotationsMessager(CatalogueChangeBodyMessager):
             turtle = graph.serialize(format="turtle")
             jsonld = graph.serialize(format="json-ld")
 
-            key_root = CATALOGUE_PUBLIC_BUCKET_PREFIX + cat_path + f"/annotations/{uuid}"
+            key_root = CATALOGUE_PUBLIC_BUCKET_PREFIX + f"/annotations/{uuid}"
 
             return [
                 Messager.S3UploadAction(
