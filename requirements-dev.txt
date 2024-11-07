@@ -10,12 +10,12 @@ attrs==24.2.0
     #   referencing
 black==24.10.0
     # via annotations-ingester (pyproject.toml)
-boto3==1.35.54
+boto3==1.35.55
     # via
     #   annotations-ingester (pyproject.toml)
     #   eodhp-utils
     #   moto
-botocore==1.35.54
+botocore==1.35.55
     # via
     #   annotations-ingester (pyproject.toml)
     #   boto3

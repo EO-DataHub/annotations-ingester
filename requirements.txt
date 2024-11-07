@@ -8,11 +8,11 @@ attrs==24.2.0
     # via
     #   jsonschema
     #   referencing
-boto3==1.35.43
+boto3==1.35.55
     # via
     #   annotations-ingester (pyproject.toml)
     #   eodhp-utils
-botocore==1.35.43
+botocore==1.35.55
     # via
     #   annotations-ingester (pyproject.toml)
     #   boto3
@@ -22,8 +22,6 @@ certifi==2024.8.30
     # via pulsar-client
 eodhp-utils @ git+https://github.com/UKEODHP/eodhp-utils@EODHP-643-run
     # via annotations-ingester (pyproject.toml)
-html5lib-modern==1.2
-    # via rdflib
 jmespath==1.0.1
     # via
     #   boto3
@@ -44,13 +42,13 @@ python-dateutil==2.9.0.post0
     # via
     #   botocore
     #   pystac
-rdflib==7.1.0
+rdflib==7.1.1
     # via annotations-ingester (pyproject.toml)
 referencing==0.35.1
     # via
     #   jsonschema
     #   jsonschema-specifications
-rpds-py==0.20.0
+rpds-py==0.21.0
     # via
     #   jsonschema
     #   referencing
