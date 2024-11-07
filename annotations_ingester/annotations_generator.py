@@ -31,11 +31,7 @@ class AnnotationsMessager(CatalogueChangeBodyMessager):
         **kwargs,
     ) -> Sequence[Messager.Action]:
 
-        print('aaaaaaaaaaaaaaaaaaaaaaaaaaa')
-        print(cat_path)
-
-        short_path = '/'.join(cat_path.split()[:-1])
-        print(short_path)
+        short_path = "/".join(cat_path.split("/")[:-1])
 
         with tempfile.NamedTemporaryFile() as tf:
             tf.write(entry_body)
@@ -53,7 +49,7 @@ class AnnotationsMessager(CatalogueChangeBodyMessager):
             jsonld = graph.serialize(format="json-ld")
 
             key_root = f"/catalogues/{short_path}/annotations/{uuid}"
-            print(key_root)
+
             bucket = os.environ.get("S3_BUCKET")
 
             return [
