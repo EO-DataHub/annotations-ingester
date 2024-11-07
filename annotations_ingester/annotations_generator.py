@@ -7,8 +7,6 @@ from typing import Sequence
 from eodhp_utils.messagers import Messager, CatalogueChangeBodyMessager
 from rdflib import Graph
 
-CATALOGUE_PUBLIC_BUCKET_PREFIX = "/catalogs/supported-datasets/ceda-stac-catalogue/collections/"
-
 
 class AnnotationsMessager(CatalogueChangeBodyMessager):
     """
@@ -32,6 +30,10 @@ class AnnotationsMessager(CatalogueChangeBodyMessager):
         **kwargs,
     ) -> Sequence[Messager.Action]:
 
+        print(cat_path)
+
+        short_path = '/'.join(cat_path.split()[:-1])
+
         with tempfile.NamedTemporaryFile() as tf:
             tf.write(entry_body)
             graph = Graph()
@@ -47,7 +49,7 @@ class AnnotationsMessager(CatalogueChangeBodyMessager):
             turtle = graph.serialize(format="turtle")
             jsonld = graph.serialize(format="json-ld")
 
-            key_root = CATALOGUE_PUBLIC_BUCKET_PREFIX + f"/annotations/{uuid}"
+            key_root = f"/catalogues/{short_path}/annotations/{uuid}"
 
             return [
                 Messager.S3UploadAction(
