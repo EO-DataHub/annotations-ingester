@@ -66,8 +66,9 @@ class AnnotationsMessager(CatalogueChangeBodyMessager):
 
 
 def get_uuid_from_graph(file_contents):
+    decoded = json.loads(file_contents.decode('utf-8'))
 
-    link = file_contents.get("links")[0].get("href")
+    link = decoded.get("links")[0].get("href")
 
     uuid = re.search("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}", link.lower())
 
