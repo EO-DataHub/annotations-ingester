@@ -31,6 +31,7 @@ class AnnotationsMessager(CatalogueChangeBodyMessager):
         **kwargs,
     ) -> Sequence[Messager.Action]:
 
+        print('aaaaaaaaaaaaaaaaaaaaaaaaaaa')
         print(cat_path)
 
         short_path = '/'.join(cat_path.split()[:-1])
