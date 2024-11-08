@@ -2,10 +2,9 @@ import sys
 from typing import Sequence
 
 import pystac
+from eodhp_utils.messagers import CatalogueSTACChangeMessager, Messager
 from pystac import Catalog, Collection, STACTypeError
 from rdflib import DCAT, DCTERMS, RDF, Graph, Literal, URIRef
-
-from eodhp_utils.messagers import CatalogueSTACChangeMessager, Messager
 
 DOI_URL_PREFIX = "https://doi.org/"
 CATALOGUE_PUBLIC_BUCKET_PREFIX = "/catalogue/"

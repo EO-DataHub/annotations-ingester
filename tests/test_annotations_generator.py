@@ -1,7 +1,11 @@
 import collections
+
 import pytest
 
-from annotations_ingester.annotations_generator import get_uuid_from_graph, AnnotationsMessager
+from annotations_ingester.annotations_generator import (
+    AnnotationsMessager,
+    get_uuid_from_graph,
+)
 
 
 @pytest.fixture
