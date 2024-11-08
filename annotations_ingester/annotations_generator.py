@@ -1,3 +1,4 @@
+import io
 import logging
 import re
 import tempfile
@@ -31,17 +32,19 @@ class AnnotationsMessager(CatalogueChangeBodyMessager):
 
         short_path = "/".join(cat_path.split("/")[:-1])
 
-        # file_contents = json.dumps(entry_body.decode("utf-8"))
-        # stream = io.StringIO(file_contents)
-        #
+        file_contents = entry_body.decode("utf-8")
+        stream = io.StringIO(file_contents)
 
-        print('aaaaaaaaaaaaaaaaaaaaaaaaa')
-        print(entry_body)
-        print(type(entry_body))
-
-        print('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb')
         graph = Graph()
-        graph.parse(data=entry_body.decode("utf-8"))
+        graph.parse(file=stream)
+
+        # print('aaaaaaaaaaaaaaaaaaaaaaaaa')
+        # print(entry_body)
+        # print(type(entry_body))
+        #
+        # print('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb')
+        # graph = Graph()
+        # graph.parse(data=entry_body.decode("utf-8"))
 
         with tempfile.NamedTemporaryFile() as tf:
             tf.write(entry_body)
