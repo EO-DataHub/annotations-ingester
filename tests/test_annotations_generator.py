@@ -16,15 +16,14 @@ def mock_uuid():
 @pytest.fixture
 def mock_file_contents(mock_uuid):
     return f"""
-:qualityCheckResults
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix : <https://test.com> .
+
+:qualityCheckResults {{
     :checkRun
-        a                           eodhqa:EODHQualityMeasurementDataset;
-        rdfs:label                  "documentation review d5e53c05-861e-4946-9951-cfabdbfc44fd";
         owl:sameAs                  <urn:uuid:{mock_uuid}>;
-        eodhqa:datasetComputedOn    <https://dev.eodatahub.org.uk/api/catalogue/stac/catalogs/supported-datasets/ceda-stac-fastapi/collections/sentinel1_l1c> ;
-        eodhqa:validityEnd          "2025-01-25T04:10:00Z"^^xsd:dateTime;
-        eodhqa:weblink              :doc1, :doc2
         .
+}}
 """  # noqa:E501
 
 

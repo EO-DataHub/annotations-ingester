@@ -32,35 +32,19 @@ class AnnotationsMessager(CatalogueChangeBodyMessager):
 
         short_path = "/".join(cat_path.split("/")[:-1])
 
-        file_contents = entry_body.decode("utf-8")
-        stream = io.StringIO(file_contents)
-
         graph = Graph()
         graph.parse(entry_body, format='trig')
 
-        # print('aaaaaaaaaaaaaaaaaaaaaaaaa')
-        # print(entry_body)
-        # print(type(entry_body))
-        #
-        # print('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb')
-        # graph = Graph()
-        # graph.parse(data=entry_body.decode("utf-8"))
 
-        with tempfile.NamedTemporaryFile() as tf:
-            tf.write(entry_body)
-            graph = Graph()
+        uuid = get_uuid_from_graph(entry_body.decode("utf-8"))
 
-            graph.parse(tf.name, format="trig")
+        if uuid:
+            cache_control = 60 * 60 * 24 * 7  # 1 week
+        else:
+            cache_control = 0
 
-            uuid = get_uuid_from_graph(entry_body.decode("utf-8"))
-
-            if uuid:
-                cache_control = 60 * 60 * 24 * 7  # 1 week
-            else:
-                cache_control = 0
-
-            turtle = graph.serialize(format="turtle")
-            jsonld = graph.serialize(format="json-ld")
+        turtle = graph.serialize(format="turtle")
+        jsonld = graph.serialize(format="json-ld")
 
         key_root = f"catalogues/{short_path}/annotations/{uuid}"
 
