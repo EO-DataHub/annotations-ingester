@@ -1,7 +1,5 @@
-import io
 import logging
 import re
-import tempfile
 from typing import Sequence
 
 from eodhp_utils.messagers import CatalogueChangeBodyMessager, Messager
@@ -33,8 +31,7 @@ class AnnotationsMessager(CatalogueChangeBodyMessager):
         short_path = "/".join(cat_path.split("/")[:-1])
 
         graph = Graph()
-        graph.parse(entry_body, format='trig')
-
+        graph.parse(entry_body, format="trig")
 
         uuid = get_uuid_from_graph(entry_body.decode("utf-8"))
 
