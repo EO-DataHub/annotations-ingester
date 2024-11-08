@@ -1,3 +1,4 @@
+import io
 import json
 import logging
 import os
@@ -33,49 +34,54 @@ class AnnotationsMessager(CatalogueChangeBodyMessager):
 
         short_path = "/".join(cat_path.split("/")[:-1])
 
-        with tempfile.NamedTemporaryFile() as tf:
-            tf.write(entry_body)
-            graph = Graph()
-            graph.parse(tf.name)
+        stream = io.StringIO(entry_body)
 
-            uuid = get_uuid_from_graph(entry_body)
+        graph = Graph()
+        graph.parse(stream)
 
-            if uuid:
-                cache_control = 60*60*24*7 # 1 week
-            else:
-                cache_control = 0
+        # with tempfile.NamedTemporaryFile() as tf:
+        #     tf.write(entry_body)
+        #     graph = Graph()
+        #     graph.parse(tf.name)
 
-            turtle = graph.serialize(format="turtle")
-            jsonld = graph.serialize(format="json-ld")
+        uuid = get_uuid_from_graph(entry_body)
 
-            key_root = f"catalogues/{short_path}/annotations/{uuid}"
+        if uuid:
+            cache_control = 60*60*24*7 # 1 week
+        else:
+            cache_control = 0
 
-            return [
-                Messager.S3UploadAction(
-                    key=key_root + ".ttl",
-                    file_body=turtle,
-                    mime_type="text/turtle",
-                    cache_control=str(cache_control),
-                    bucket=self.output_bucket,
-                ),
-                Messager.S3UploadAction(
-                    key=key_root + ".jsonld",
-                    file_body=jsonld,
-                    mime_type="application/ld+json",
-                    cache_control=str(cache_control),
-                    bucket=self.output_bucket,
-                )
-            ]
+        turtle = graph.serialize(format="turtle")
+        jsonld = graph.serialize(format="json-ld")
+
+        key_root = f"catalogues/{short_path}/annotations/{uuid}"
+
+        return [
+            Messager.S3UploadAction(
+                key=key_root + ".ttl",
+                file_body=turtle,
+                mime_type="text/turtle",
+                cache_control=str(cache_control),
+                bucket=self.output_bucket,
+            ),
+            Messager.S3UploadAction(
+                key=key_root + ".jsonld",
+                file_body=jsonld,
+                mime_type="application/ld+json",
+                cache_control=str(cache_control),
+                bucket=self.output_bucket,
+            )
+    ]
 
 
 def get_uuid_from_graph(file_contents):
-    decoded = json.loads(file_contents.decode('utf-8'))
-
-    link = decoded.get("links")[0].get("href")
-
-    uuid = re.search("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}", link.lower())
+    uuid = None
+    for line in file_contents:
+        if line.strip().startswith("owl:sameAs"):
+            uuid = re.search("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}", line)
+            break
 
     if uuid is None:
         logging.error("UUID not found")
 
-    return uuid.group()
+    return uuid
