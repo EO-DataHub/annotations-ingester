@@ -34,8 +34,14 @@ class AnnotationsMessager(CatalogueChangeBodyMessager):
         # file_contents = json.dumps(entry_body.decode("utf-8"))
         # stream = io.StringIO(file_contents)
         #
-        # graph = Graph()
-        # graph.parse(stream)
+
+        print('aaaaaaaaaaaaaaaaaaaaaaaaa')
+        print(entry_body)
+        print(type(entry_body))
+
+        print('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb')
+        graph = Graph()
+        graph.parse(entry_body.decode("utf-8"))
 
         with tempfile.NamedTemporaryFile() as tf:
             tf.write(entry_body)
