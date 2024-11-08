@@ -36,7 +36,7 @@ class AnnotationsMessager(CatalogueChangeBodyMessager):
         stream = io.StringIO(file_contents)
 
         graph = Graph()
-        graph.parse(data=stream, format='trig')
+        graph.parse(entry_body, format='trig')
 
         # print('aaaaaaaaaaaaaaaaaaaaaaaaa')
         # print(entry_body)
