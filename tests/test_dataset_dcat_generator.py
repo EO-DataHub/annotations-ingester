@@ -131,7 +131,9 @@ def mock_catalog():
 def test_ignores_irrelevant_entries(fake_entry):
     messager = DatasetDCATMessager(None, None)
 
-    actions = messager.process_update_stac(cat_path="/a/b", stac=fake_entry, source=None, target=None)
+    actions = messager.process_update_stac(
+        cat_path="/a/b", stac=fake_entry, source=None, target=None
+    )
 
     assert actions == []
 

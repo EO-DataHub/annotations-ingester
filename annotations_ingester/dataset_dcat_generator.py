@@ -102,7 +102,6 @@ class DatasetDCATMessager(CatalogueSTACChangeMessager):
 
         return g
 
-
     def process_delete(
         self, bucket: str, key: str, id: str, source: str, target: str
     ) -> Sequence[Messager.Action]:

@@ -1,12 +1,9 @@
-import io
-import json
 import logging
-import os
 import re
 import tempfile
 from typing import Sequence
 
-from eodhp_utils.messagers import Messager, CatalogueChangeBodyMessager
+from eodhp_utils.messagers import CatalogueChangeBodyMessager, Messager
 from rdflib import Graph
 
 
@@ -49,7 +46,7 @@ class AnnotationsMessager(CatalogueChangeBodyMessager):
             uuid = get_uuid_from_graph(entry_body.decode("utf-8"))
 
             if uuid:
-                cache_control = 60*60*24*7 # 1 week
+                cache_control = 60 * 60 * 24 * 7  # 1 week
             else:
                 cache_control = 0
 
@@ -72,8 +69,8 @@ class AnnotationsMessager(CatalogueChangeBodyMessager):
                 mime_type="application/ld+json",
                 cache_control=str(cache_control),
                 bucket=self.output_bucket,
-            )
-    ]
+            ),
+        ]
 
 
 def get_uuid_from_graph(file_contents):
@@ -82,7 +79,7 @@ def get_uuid_from_graph(file_contents):
     `owl:sameAs                  <urn:uuid:12345678-1234-1234-1234-123456789012>;`
     """
 
-    pattern = r'owl:sameAs\s+<urn:uuid:([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})>;'
+    pattern = r"owl:sameAs\s+<urn:uuid:([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})>;"  # noqa:E501
 
     match = re.search(pattern, file_contents)
 
