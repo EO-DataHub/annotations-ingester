@@ -46,6 +46,10 @@ class AnnotationsMessager(CatalogueChangeBodyMessager):
 
             graph.parse(tf.name, format="trig")
 
+            print('aaaaaaaaaaaaaaaaaa')
+            print(entry_body)
+            print(type(entry_body))
+
             uuid = get_uuid_from_graph(entry_body)
 
             if uuid:
