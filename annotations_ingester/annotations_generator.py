@@ -41,7 +41,7 @@ class AnnotationsMessager(CatalogueChangeBodyMessager):
 
         print('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb')
         graph = Graph()
-        graph.parse(entry_body.decode("utf-8"))
+        graph.parse(data=entry_body.decode("utf-8"))
 
         with tempfile.NamedTemporaryFile() as tf:
             tf.write(entry_body)
