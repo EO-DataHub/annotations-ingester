@@ -43,6 +43,8 @@ class AnnotationsMessager(CatalogueChangeBodyMessager):
         with tempfile.NamedTemporaryFile() as tf:
             tf.write(entry_body)
             graph = Graph()
+
+            tf.name = tf.name + '.trig'
             graph.parse(tf.name)
 
             uuid = get_uuid_from_graph(entry_body)
