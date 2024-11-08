@@ -46,10 +46,6 @@ class AnnotationsMessager(CatalogueChangeBodyMessager):
 
             graph.parse(tf.name, format="trig")
 
-            print('aaaaaaaaaaaaaaaaaa')
-            print(entry_body)
-            print(type(entry_body))
-
             uuid = get_uuid_from_graph(entry_body.decode("utf-8"))
 
             if uuid:
@@ -81,16 +77,13 @@ class AnnotationsMessager(CatalogueChangeBodyMessager):
 
 
 def get_uuid_from_graph(file_contents):
+    """
+    Looks for a line containing the UUID that looks like this:
+    `owl:sameAs                  <urn:uuid:12345678-1234-1234-1234-123456789012>;`
+    """
 
-    print(file_contents)
-    # for line in file_contents.split("\n"):
-    #     print(line)
-    #     if line.strip().startswith("owl:sameAs"):
-    #         uuid = re.search("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}", line)
-    #         break
     pattern = r'owl:sameAs\s+<urn:uuid:([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})>;'
 
-    # Search for the pattern in the text
     match = re.search(pattern, file_contents)
 
     if match:
