@@ -34,7 +34,7 @@ class AnnotationsMessager(CatalogueChangeBodyMessager):
 
         short_path = "/".join(cat_path.split("/")[:-1])
 
-        file_contents = json.dumps(entry_body)
+        file_contents = json.dumps(entry_body.decode("utf-8"))
         stream = io.StringIO(file_contents)
 
         graph = Graph()
