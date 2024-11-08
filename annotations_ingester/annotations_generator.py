@@ -44,8 +44,7 @@ class AnnotationsMessager(CatalogueChangeBodyMessager):
             tf.write(entry_body)
             graph = Graph()
 
-            tf.name = tf.name + '.trig'
-            graph.parse(tf.name)
+            graph.parse(tf.name, format="trig")
 
             uuid = get_uuid_from_graph(entry_body)
 
