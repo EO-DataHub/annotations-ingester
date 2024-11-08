@@ -83,7 +83,8 @@ class AnnotationsMessager(CatalogueChangeBodyMessager):
 def get_uuid_from_graph(file_contents):
     uuid = None
     print(file_contents)
-    for line in file_contents:
+    for line in file_contents.split("\n"):
+        print(line)
         if line.strip().startswith("owl:sameAs"):
             uuid = re.search("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}", line)
             break
