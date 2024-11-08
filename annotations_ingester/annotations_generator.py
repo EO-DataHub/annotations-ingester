@@ -50,7 +50,7 @@ class AnnotationsMessager(CatalogueChangeBodyMessager):
             print(entry_body)
             print(type(entry_body))
 
-            uuid = get_uuid_from_graph(entry_body)
+            uuid = get_uuid_from_graph(entry_body.decode("utf-8"))
 
             if uuid:
                 cache_control = 60*60*24*7 # 1 week
