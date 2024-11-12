@@ -8,11 +8,11 @@ attrs==24.2.0
     # via
     #   jsonschema
     #   referencing
-boto3==1.35.56
+boto3==1.35.58
     # via
     #   annotations-ingester (pyproject.toml)
     #   eodhp-utils
-botocore==1.35.56
+botocore==1.35.58
     # via
     #   annotations-ingester (pyproject.toml)
     #   boto3
@@ -20,7 +20,7 @@ botocore==1.35.56
     #   s3transfer
 certifi==2024.8.30
     # via pulsar-client
-eodhp-utils @ git+https://github.com/UKEODHP/eodhp-utils@EODHP-643-run
+eodhp-utils @ git+https://github.com/UKEODHP/eodhp-utils@v0.1.2
     # via annotations-ingester (pyproject.toml)
 jmespath==1.0.1
     # via
