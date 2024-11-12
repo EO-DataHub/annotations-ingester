@@ -121,7 +121,7 @@ def test_process_delete():
 
 
 def test_process_update_body(mock_file_contents, mock_uuid):
-    bucket_name = 'test_bucket'
+    bucket_name = "test_bucket"
     messenger = AnnotationsMessager(None, bucket_name, None, None)
 
     body = mock_file_contents.encode("utf-8")
@@ -132,5 +132,5 @@ def test_process_update_body(mock_file_contents, mock_uuid):
     assert len(actions) == 2
 
     assert actions[0].bucket == bucket_name
-    assert actions[0].cache_control == 'max-age=604800'
+    assert actions[0].cache_control == "max-age=604800"
     assert mock_uuid in actions[0].key

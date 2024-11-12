@@ -1,10 +1,8 @@
-
 from typing import Sequence
-from rdflib import ConjunctiveGraph, URIRef
-from rdflib.namespace import RDF, OWL
 
 from eodhp_utils.messagers import CatalogueChangeBodyMessager, Messager
-from rdflib import Graph
+from rdflib import ConjunctiveGraph, Graph, URIRef
+from rdflib.namespace import OWL, RDF
 
 
 class AnnotationsMessager(CatalogueChangeBodyMessager):
@@ -62,6 +60,7 @@ class AnnotationsMessager(CatalogueChangeBodyMessager):
             ),
         ]
 
+
 def get_uuid_from_graph(file_contents: str) -> str:
     """Parses file data to find UUID"""
 
@@ -71,10 +70,16 @@ def get_uuid_from_graph(file_contents: str) -> str:
     # The entire QA run outputs are represented by a resource of type `eodhqa:EODHQualityMeasurementDataset`
     # There should be only one.
     eodhqa = URIRef("https://eodatahub.org.uk/api/ontologies/qa/")
-    measurement_dset = next(graph.triples((None, RDF.type, eodhqa + "EODHQualityMeasurementDataset")))[0]
+    measurement_dset = next(
+        graph.triples((None, RDF.type, eodhqa + "EODHQualityMeasurementDataset"))
+    )[0]
 
     # The eodhqa:EODHQualityMeasurementDataset should always have an `owl:sameAs` triple with its UUID.
-    uuid_ref = next(obj for obj in list(graph.objects(measurement_dset, OWL.sameAs)) if str(obj).startswith("urn:uuid:"))
-    uuid = str(uuid_ref)[len("urn:uuid:"):]
+    uuid_ref = next(
+        obj
+        for obj in list(graph.objects(measurement_dset, OWL.sameAs))
+        if str(obj).startswith("urn:uuid:")
+    )
+    uuid = str(uuid_ref)[len("urn:uuid:") :]
 
     return uuid
