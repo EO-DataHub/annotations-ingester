@@ -28,9 +28,10 @@ class DatasetDCATMessager(CatalogueSTACChangeMessager):
         target: str,
         **kwargs,
     ) -> Sequence[Messager.Action]:
+        import logging
+        logging.warning('CCCCCCCCCCCCCCCCCCCCCCCc')
         ld_graph = self.generate_dcat(stac)
 
-        import logging
 
         logging.warning(ld_graph)
 
