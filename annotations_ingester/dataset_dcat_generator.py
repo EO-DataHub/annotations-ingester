@@ -30,6 +30,8 @@ class DatasetDCATMessager(CatalogueSTACChangeMessager):
     ) -> Sequence[Messager.Action]:
         ld_graph = self.generate_dcat(stac)
 
+        import logging
+
         logging.warning(ld_graph)
 
         if ld_graph is None:
