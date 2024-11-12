@@ -1,6 +1,7 @@
-import logging
-import re
+
 from typing import Sequence
+from rdflib import ConjunctiveGraph, URIRef
+from rdflib.namespace import RDF, OWL
 
 from eodhp_utils.messagers import CatalogueChangeBodyMessager, Messager
 from rdflib import Graph
@@ -25,7 +26,6 @@ class AnnotationsMessager(CatalogueChangeBodyMessager):
         cat_path: str,
         source: str,
         target: str,
-        **kwargs,
     ) -> Sequence[Messager.Action]:
 
         short_path = "/".join(cat_path.split("/")[:-1])
@@ -33,50 +33,48 @@ class AnnotationsMessager(CatalogueChangeBodyMessager):
         graph = Graph()
         graph.parse(entry_body, format="trig")
 
-        uuid = get_uuid_from_graph(entry_body.decode("utf-8"))
+        uuid = get_uuid_from_graph(entry_body)
 
         if uuid:
-            cache_control = 60 * 60 * 24 * 7  # 1 week
+            cache_control_length = 60 * 60 * 24 * 7  # 1 week
         else:
-            cache_control = 0
+            cache_control_length = 0
 
         turtle = graph.serialize(format="turtle")
         jsonld = graph.serialize(format="json-ld")
 
-        key_root = f"catalogues/{short_path}/annotations/{uuid}"
+        key_root = f"catalogues{short_path}/annotations/{uuid}"
 
         return [
             Messager.S3UploadAction(
                 key=key_root + ".ttl",
                 file_body=turtle,
                 mime_type="text/turtle",
-                cache_control=str(cache_control),
+                cache_control=f"max-age={cache_control_length}",
                 bucket=self.output_bucket,
             ),
             Messager.S3UploadAction(
                 key=key_root + ".jsonld",
                 file_body=jsonld,
                 mime_type="application/ld+json",
-                cache_control=str(cache_control),
+                cache_control=f"max-age={cache_control_length}",
                 bucket=self.output_bucket,
             ),
         ]
 
+def get_uuid_from_graph(file_contents: str) -> str:
+    """Parses file data to find UUID"""
 
-def get_uuid_from_graph(file_contents):
-    """
-    Looks for a line containing the UUID that looks like this:
-    `owl:sameAs                  <urn:uuid:12345678-1234-1234-1234-123456789012>;`
-    """
+    graph = ConjunctiveGraph()
+    graph.parse(data=file_contents, format="trig")
 
-    pattern = r"owl:sameAs\s+<urn:uuid:([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})>;"  # noqa:E501
+    # The entire QA run outputs are represented by a resource of type `eodhqa:EODHQualityMeasurementDataset`
+    # There should be only one.
+    eodhqa = URIRef("https://eodatahub.org.uk/api/ontologies/qa/")
+    measurement_dset = next(graph.triples((None, RDF.type, eodhqa + "EODHQualityMeasurementDataset")))[0]
 
-    match = re.search(pattern, file_contents)
-
-    if match:
-        uuid = match.group(1)
-    else:
-        uuid = None
-        logging.error("UUID not found")
+    # The eodhqa:EODHQualityMeasurementDataset should always have an `owl:sameAs` triple with its UUID.
+    uuid_ref = next(obj for obj in list(graph.objects(measurement_dset, OWL.sameAs)) if str(obj).startswith("urn:uuid:"))
+    uuid = str(uuid_ref)[len("urn:uuid:"):]
 
     return uuid
