@@ -27,8 +27,11 @@ def main():
     annotations_messager = AnnotationsMessager(
         s3_client=s3_client, output_bucket=destination_bucket
     )
+    import logging
+    logging.warning('EEEEEEEEEEEEEEEEE')
     datasets_messager = DatasetDCATMessager(s3_client=s3_client, output_bucket=destination_bucket)
 
+    logging.warning(datasets_messager)
     run(
         {
             "transformed-annotations": annotations_messager,

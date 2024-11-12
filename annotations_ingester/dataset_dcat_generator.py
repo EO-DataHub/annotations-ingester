@@ -20,6 +20,11 @@ class DatasetDCATMessager(CatalogueSTACChangeMessager):
         /catalogue/
     """
 
+    def __init__(self, **kwargs):
+        super().__init__(kwargs)
+        import logging
+        print('DDDDDDDDDDDDDDDDDDDD')
+
     def process_update_stac(
         self,
         stac: dict,
