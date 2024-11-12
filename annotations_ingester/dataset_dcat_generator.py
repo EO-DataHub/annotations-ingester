@@ -30,11 +30,17 @@ class DatasetDCATMessager(CatalogueSTACChangeMessager):
     ) -> Sequence[Messager.Action]:
         ld_graph = self.generate_dcat(stac)
 
+        print(ld_graph)
+
         if ld_graph is None:
+            print('AAAAAAAAAAAAAAA')
             return []
         else:
+            print('BBBBBBBBBBBBBBBBBBBBBb')
             ld_ttl = ld_graph.serialize(format="turtle")
             ld_jsonld = ld_graph.serialize(format="json-ld")
+
+            print(CATALOGUE_PUBLIC_BUCKET_PREFIX + cat_path + ".ttl")
 
             # This saves the output directly to the catalogue public bucket. With a little nginx
             # config, this means it can appear at, say,
