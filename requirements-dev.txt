@@ -14,32 +14,22 @@ boto3==1.35.56
     # via
     #   annotations-ingester (pyproject.toml)
     #   eodhp-utils
-    #   moto
 botocore==1.35.56
     # via
     #   annotations-ingester (pyproject.toml)
     #   boto3
     #   eodhp-utils
-    #   moto
     #   s3transfer
 build==1.2.2.post1
     # via pip-tools
 certifi==2024.8.30
-    # via
-    #   pulsar-client
-    #   requests
-cffi==1.17.1
-    # via cryptography
+    # via pulsar-client
 cfgv==3.4.0
     # via pre-commit
-charset-normalizer==3.4.0
-    # via requests
 click==8.1.7
     # via
     #   black
     #   pip-tools
-cryptography==43.0.3
-    # via moto
 distlib==0.3.9
     # via virtualenv
 eodhp-utils @ git+https://github.com/UKEODHP/eodhp-utils@EODHP-643-run
@@ -52,14 +42,10 @@ filelock==3.16.1
     # via virtualenv
 identify==2.6.1
     # via pre-commit
-idna==3.10
-    # via requests
 iniconfig==2.0.0
     # via pytest
 isort==5.13.2
     # via annotations-ingester (pyproject.toml)
-jinja2==3.1.4
-    # via moto
 jmespath==1.0.1
     # via
     #   boto3
@@ -68,12 +54,6 @@ jsonschema==4.23.0
     # via eodhp-utils
 jsonschema-specifications==2024.10.1
     # via jsonschema
-markupsafe==3.0.2
-    # via
-    #   jinja2
-    #   werkzeug
-moto==5.0.20
-    # via annotations-ingester (pyproject.toml)
 mypy-extensions==1.0.0
     # via black
 nodeenv==1.9.1
@@ -100,8 +80,6 @@ pulsar-client==3.5.0
     # via
     #   annotations-ingester (pyproject.toml)
     #   eodhp-utils
-pycparser==2.22
-    # via cffi
 pyparsing==3.2.0
     # via rdflib
 pyproject-hooks==1.2.0
@@ -124,24 +102,15 @@ pytest-xdist==3.6.1
 python-dateutil==2.9.0.post0
     # via
     #   botocore
-    #   moto
     #   pystac
 pyyaml==6.0.2
-    # via
-    #   pre-commit
-    #   responses
+    # via pre-commit
 rdflib==7.1.1
     # via annotations-ingester (pyproject.toml)
 referencing==0.35.1
     # via
     #   jsonschema
     #   jsonschema-specifications
-requests==2.32.3
-    # via
-    #   moto
-    #   responses
-responses==0.25.3
-    # via moto
 rpds-py==0.21.0
     # via
     #   jsonschema
@@ -155,22 +124,15 @@ six==1.16.0
 trove-classifiers==2024.10.21.16
     # via validate-pyproject
 urllib3==2.2.3
-    # via
-    #   botocore
-    #   requests
-    #   responses
+    # via botocore
 validate-pyproject[all]==0.22
     # via annotations-ingester (pyproject.toml)
 virtualenv==20.27.1
     # via pre-commit
 watchdog==6.0.0
     # via pytest-watcher
-werkzeug==3.1.2
-    # via moto
 wheel==0.44.0
     # via pip-tools
-xmltodict==0.14.2
-    # via moto
 
 # The following packages are considered to be unsafe in a requirements file:
 # pip
