@@ -43,19 +43,21 @@ class DatasetDCATMessager(CatalogueSTACChangeMessager):
             ld_ttl = ld_graph.serialize(format="turtle")
             ld_jsonld = ld_graph.serialize(format="json-ld")
 
-            logging.warning(CATALOGUE_PUBLIC_BUCKET_PREFIX + cat_path + ".ttl")
+            short_path = "/".join(cat_path.split("/")[:-1])
+
+            logging.warning(CATALOGUE_PUBLIC_BUCKET_PREFIX + short_path + ".ttl")
 
             # This saves the output directly to the catalogue public bucket. With a little nginx
             # config, this means it can appear at, say,
             #  /api/catalogue/stac/catalogs/my-catalog/collections/collection.jsonld
             return (
                 Messager.S3UploadAction(
-                    key=CATALOGUE_PUBLIC_BUCKET_PREFIX + cat_path + ".ttl",
+                    key=CATALOGUE_PUBLIC_BUCKET_PREFIX + short_path + ".ttl",
                     file_body=ld_ttl,
                     mime_type="text/turtle",
                 ),
                 Messager.S3UploadAction(
-                    key=CATALOGUE_PUBLIC_BUCKET_PREFIX + cat_path + ".jsonld",
+                    key=CATALOGUE_PUBLIC_BUCKET_PREFIX + short_path + ".jsonld",
                     file_body=ld_jsonld,
                     mime_type="application/ld+json",
                 ),
