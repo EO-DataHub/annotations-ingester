@@ -42,17 +42,19 @@ class DatasetDCATMessager(CatalogueSTACChangeMessager):
 
             file_name = Path(cat_path).stem
 
+            key_root = f"{CATALOGUE_PUBLIC_BUCKET_PREFIX}/{short_path}/{file_name}".replace("//", "/")
+
             # This saves the output directly to the catalogue public bucket. With a little nginx
             # config, this means it can appear at, say,
             #  /api/catalogue/stac/catalogs/my-catalog/collections/collection.jsonld
             return (
                 Messager.S3UploadAction(
-                    key=CATALOGUE_PUBLIC_BUCKET_PREFIX + short_path + f"/{file_name}.ttl",
+                    key=f"{key_root}.ttl",
                     file_body=ld_ttl,
                     mime_type="text/turtle",
                 ),
                 Messager.S3UploadAction(
-                    key=CATALOGUE_PUBLIC_BUCKET_PREFIX + short_path + f"/{file_name}.jsonld",
+                    key=f"{key_root}.jsonld",
                     file_body=ld_jsonld,
                     mime_type="application/ld+json",
                 ),
