@@ -20,11 +20,6 @@ class DatasetDCATMessager(CatalogueSTACChangeMessager):
         /catalogue/
     """
 
-    def __init__(self, **kwargs):
-        super().__init__(s3_client=kwargs['s3_client'], output_bucket=kwargs['output_bucket'])
-        import logging
-        logging.warning('DDDDDDDDDDDDDDDDDDDD')
-
     def process_update_stac(
         self,
         stac: dict,
