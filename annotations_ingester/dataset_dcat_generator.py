@@ -46,6 +46,7 @@ class DatasetDCATMessager(CatalogueSTACChangeMessager):
 
             print("AAAAAAAAAAAAAAAA")
             print(short_path)
+            print("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb")
             print(key_root)
 
             # This saves the output directly to the catalogue public bucket. With a little nginx
