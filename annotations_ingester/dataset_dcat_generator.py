@@ -103,8 +103,11 @@ class DatasetDCATMessager(CatalogueSTACChangeMessager):
         # (in URL form) or a sci:doi property (in bare form, such as 10.5270/S2_-742ikth).
         #
         # cite-as might not be a DOI, however, as it can be used more generally.
-        cite_as = stac.get_single_link("cite-as").absolute_href
-        sys.stderr.write(f"{cite_as=}")
+        cite_as = None
+
+        if full_citation_link := stac.get_single_link("cite-as"):
+            cite_as = full_citation_link.absolute_href
+
         sci_doi = stac.extra_fields.get("sci:doi")
 
         if cite_as is not None:
