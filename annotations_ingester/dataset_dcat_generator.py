@@ -39,6 +39,7 @@ class DatasetDCATMessager(CatalogueSTACChangeMessager):
 
         logging.warning(ld_graph)
 
+
         if ld_graph is None:
             logging.warning('AAAAAAAAAAAAAAA')
             return []
