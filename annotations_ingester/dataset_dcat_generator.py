@@ -9,7 +9,7 @@ from pystac import Catalog, Collection, STACTypeError
 from rdflib import DCAT, DCTERMS, RDF, Graph, Literal, URIRef
 
 DOI_URL_PREFIX = "https://doi.org/"
-CATALOGUE_PUBLIC_BUCKET_PREFIX = "/catalogue/"
+CATALOGUE_PUBLIC_BUCKET_PREFIX = "catalogue/"
 
 
 class DatasetDCATMessager(CatalogueSTACChangeMessager):
@@ -46,6 +46,9 @@ class DatasetDCATMessager(CatalogueSTACChangeMessager):
             ld_jsonld = ld_graph.serialize(format="json-ld")
 
             short_path = "/".join(cat_path.split("/")[:-1])
+            if short_path == "/":
+                short_path = ""
+
             file_name = Path(cat_path).stem
 
             logging.warning(CATALOGUE_PUBLIC_BUCKET_PREFIX + short_path + f"/{file_name}.ttl")
