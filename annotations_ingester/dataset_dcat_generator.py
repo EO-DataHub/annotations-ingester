@@ -37,7 +37,6 @@ class DatasetDCATMessager(CatalogueSTACChangeMessager):
         logging.warning('CCCCCCCCCCCCCCCCCCCCCCCc')
         ld_graph = self.generate_dcat(stac)
 
-
         logging.warning(ld_graph)
 
         if ld_graph is None:
