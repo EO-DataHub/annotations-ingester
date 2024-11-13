@@ -44,13 +44,6 @@ class DatasetDCATMessager(CatalogueSTACChangeMessager):
 
             key_root = f"{CATALOGUE_PUBLIC_BUCKET_PREFIX}/{short_path}/{file_name}".replace("//", "/")
 
-            print("AAAAAAAAAAAAAAAA")
-            print(short_path)
-            print("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb")
-            print(key_root)
-            print("CCCCCCCCCCCCCC")
-            print(file_name)
-
             # This saves the output directly to the catalogue public bucket. With a little nginx
             # config, this means it can appear at, say,
             #  /api/catalogue/stac/catalogs/my-catalog/collections/collection.jsonld
