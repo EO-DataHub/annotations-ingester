@@ -20,7 +20,7 @@ botocore==1.35.58
     #   s3transfer
 certifi==2024.8.30
     # via pulsar-client
-eodhp-utils @ git+https://github.com/UKEODHP/eodhp-utils@v0.1.2
+eodhp-utils @ git+https://github.com/UKEODHP/eodhp-utils@v0.1.3
     # via annotations-ingester (pyproject.toml)
 jmespath==1.0.1
     # via
