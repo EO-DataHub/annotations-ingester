@@ -1,4 +1,4 @@
-import sys
+from pathlib import Path
 from typing import Sequence
 
 import pystac
@@ -7,7 +7,7 @@ from pystac import Catalog, Collection, STACTypeError
 from rdflib import DCAT, DCTERMS, RDF, Graph, Literal, URIRef
 
 DOI_URL_PREFIX = "https://doi.org/"
-CATALOGUE_PUBLIC_BUCKET_PREFIX = "/catalogue/"
+CATALOGUE_PUBLIC_BUCKET_PREFIX = "catalogue/"
 
 
 class DatasetDCATMessager(CatalogueSTACChangeMessager):
@@ -36,17 +36,23 @@ class DatasetDCATMessager(CatalogueSTACChangeMessager):
             ld_ttl = ld_graph.serialize(format="turtle")
             ld_jsonld = ld_graph.serialize(format="json-ld")
 
+            short_path = "/".join(cat_path.split("/")[:-1])
+            if short_path == "/":
+                short_path = ""
+
+            file_name = Path(cat_path).stem
+
             # This saves the output directly to the catalogue public bucket. With a little nginx
             # config, this means it can appear at, say,
             #  /api/catalogue/stac/catalogs/my-catalog/collections/collection.jsonld
             return (
                 Messager.S3UploadAction(
-                    key=CATALOGUE_PUBLIC_BUCKET_PREFIX + cat_path + ".ttl",
+                    key=CATALOGUE_PUBLIC_BUCKET_PREFIX + short_path + f"/{file_name}.ttl",
                     file_body=ld_ttl,
                     mime_type="text/turtle",
                 ),
                 Messager.S3UploadAction(
-                    key=CATALOGUE_PUBLIC_BUCKET_PREFIX + cat_path + ".jsonld",
+                    key=CATALOGUE_PUBLIC_BUCKET_PREFIX + short_path + f"/{file_name}.jsonld",
                     file_body=ld_jsonld,
                     mime_type="application/ld+json",
                 ),
@@ -86,8 +92,12 @@ class DatasetDCATMessager(CatalogueSTACChangeMessager):
         # (in URL form) or a sci:doi property (in bare form, such as 10.5270/S2_-742ikth).
         #
         # cite-as might not be a DOI, however, as it can be used more generally.
-        cite_as = stac.get_single_link("cite-as").absolute_href
-        sys.stderr.write(f"{cite_as=}")
+
+        cite_as = None
+
+        if full_citation_link := stac.get_single_link("cite-as"):
+            cite_as = full_citation_link.absolute_href
+
         sci_doi = stac.extra_fields.get("sci:doi")
 
         if cite_as is not None:
