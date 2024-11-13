@@ -42,7 +42,8 @@ class DatasetDCATMessager(CatalogueSTACChangeMessager):
 
             file_name = Path(cat_path).stem
 
-            key_root = f"{CATALOGUE_PUBLIC_BUCKET_PREFIX}/{short_path}/{file_name}".replace("//", "/")
+            key_root = f"{CATALOGUE_PUBLIC_BUCKET_PREFIX}/{short_path}/{file_name}"
+            key_root = key_root.replace("//", "/")
 
             # This saves the output directly to the catalogue public bucket. With a little nginx
             # config, this means it can appear at, say,
