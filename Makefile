@@ -63,3 +63,5 @@ takeover: venv
 		kubectl port-forward service/pulsar-proxy -n pulsar 6650:6650 &\
 		S3_BUCKET=spdx-public-eodhp-dev ./venv/bin/python3 -m annotations_ingester --pulsar-url pulsar://localhost:6650 -vv -t\
 	'
+krestart:
+	kubectl rollout restart deployment.apps/annotations-ingester -n rc
