@@ -56,3 +56,10 @@ venv:
 	curl -o .pre-commit-config.yaml https://raw.githubusercontent.com/EO-DataHub/github-actions/main/.pre-commit-config-python.yaml
 
 setup: venv requirements .make-venv-installed .git/hooks/pre-commit
+
+takeover: venv
+	bash -c '\
+		trap "trap - SIGTERM && kill -- -$$$$" SIGINT SIGTERM EXIT;\
+		kubectl port-forward service/pulsar-proxy -n pulsar 6650:6650 &\
+		S3_BUCKET=spdx-public-eodhp-dev ./venv/bin/python3 -m annotations_ingester --pulsar-url pulsar://localhost:6650 -vv -t\
+	'
