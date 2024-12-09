@@ -70,7 +70,7 @@ dependencies = [
     "rdflib",
     "pystac",
     "click",
-    "eodhp-utils @ git+https://github.com/UKEODHP/eodhp-utils@EODHP-643-s3-client",
+    "eodhp-utils @ git+https://github.com/UKEODHP/eodhp-utils@v0.1.4",
 ]
 
 # List additional groups of dependencies here (e.g. development
