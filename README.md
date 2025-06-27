@@ -1,9 +1,14 @@
 # UK EO Data Hub Platform: Annotations Ingester
 
+This service is incomplete and development work on it has been suspended.
+
 The annotations ingester populates the annotations service with both annotations and a simple DCAT
 description of catalogue entries. Annotations are small pieces of third-party metadata attached
 to catalogue entries - ie, they are not produced or maintained by the supplier of the dataset or
 its core catalogue entry.
+
+Annotations are read from the transformed-annotations Pulsar topic and dataset data (STAC
+Collections) from the transformed topic.
 
 Annotations are initially intended for representing third-party quality assurance results. They
 are intended to also be usable for storing provenance information (in PROV format), linking data
